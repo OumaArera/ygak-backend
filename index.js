@@ -1,6 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const session = require('express-session');
+const routes = require('./routes');
 require('dotenv').config();
 
 const pool = require('./config/db');
@@ -55,6 +56,9 @@ pool.query('SELECT NOW()')
     console.error('Database connection failed:', err);
     process.exit(1); // stop app if DB connection fails
   });
+
+// Routes
+app.use('/api/v1', routes);
 
 // Test route
 app.get('/', (req, res) => {
