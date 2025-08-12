@@ -7,7 +7,8 @@ class AuthController {
   async login(req, res, next) {
     try {
       const { email, password } = req.body;
-      const token = await AuthService.login(email, password);
+      const user = req.user ? req.user : {}
+      const token = await AuthService.login(email, password, user);
       res.json({ token });
     } catch (err) {
       next(err);
@@ -31,7 +32,7 @@ class AuthController {
    */
   async blockUser(req, res, next) {
     try {
-      const updatedUser = await AuthService.blockUser(req.params.userId);
+      const updatedUser = await AuthService.blockUser(req.params.userId, req.user);
       res.json(updatedUser);
     } catch (err) {
       next(err);
@@ -43,7 +44,7 @@ class AuthController {
    */
   async unblockUser(req, res, next) {
     try {
-      const updatedUser = await AuthService.unblockUser(req.params.userId);
+      const updatedUser = await AuthService.unblockUser(req.params.userId, req.user);
       res.json(updatedUser);
     } catch (err) {
       next(err);
@@ -69,7 +70,7 @@ class AuthController {
   async changePassword(req, res, next) {
     try {
       const { oldPassword, newPassword } = req.body;
-      const result = await AuthService.changePassword(req.user.id, oldPassword, newPassword);
+      const result = await AuthService.changePassword(req.user.id, oldPassword, newPassword, req.user);
       res.json(result);
     } catch (err) {
       next(err);

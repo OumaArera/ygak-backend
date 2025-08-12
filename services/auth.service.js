@@ -8,8 +8,9 @@ class AuthService {
   /**
    * Authenticate a user and return JWT token
    */
-  async login(email, password) {
-    const user = await authRepository.findUserForLogin(email);
+  async login(email, password, userContext) {
+    const user = await authRepository.findUserForLogin(email, userContext);
+
     if (!user) {
       throw new Error('Invalid credentials');
     }
@@ -65,16 +66,16 @@ class AuthService {
   /**
    * Block a user (set isActive to false)
    */
-  async blockUser(userId) {
-    const updatedUser = await userRepository.updateById(userId, { isActive: false });
+  async blockUser(userId, userContext) {
+    const updatedUser = await userRepository.updateById(userId, { isActive: false }, userContext);
     return updatedUser;
   }
 
   /**
    * Unblock a user (set isActive to true)
    */
-  async unblockUser(userId) {
-    const updatedUser = await userRepository.updateById(userId, { isActive: true });
+  async unblockUser(userId, userContext) {
+    const updatedUser = await userRepository.updateById(userId, { isActive: true }, userContext);
     return updatedUser;
   }
 
@@ -92,8 +93,8 @@ class AuthService {
   /**
    * Change user password
    */
-  async changePassword(id, oldPassword, newPassword) {
-    const user = await userRepository.findById(id);
+  async changePassword(id, oldPassword, newPassword, userContext) {
+    const user = await userRepository.findById(id, userContext);
     if (!user) {
       throw new Error('User not found');
     }

@@ -1,7 +1,5 @@
 const { User } = require('../models');
-// const { Op } = require('sequelize');
-
-// const userRepository = require('./user.repository');
+const activityTrackerService = require('../services/activityTracker.service');
 
 class AuthRepository {
   /**
@@ -9,8 +7,17 @@ class AuthRepository {
    * @param {string} email
    * @returns {Promise<User|null>}
    */
-  async findUserForLogin(email) {
-    return await User.findOne({ where: { email } });
+  async findUserForLogin(email, userContext) {
+    const result = await User.findOne({ where: { email } });
+    await activityTrackerService.logActivity({
+      userId: userContext.id ? userContext.id : null,
+      model: "User",
+      action: "GET",
+      description: "Login User",
+      ipAddress: userContext.ip ? userContext.ip : null,
+      userAgent: userContext.userAgent? userContext.userAgent : null
+    });
+    return result
   }
 }
 

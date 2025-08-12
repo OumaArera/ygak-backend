@@ -4,6 +4,7 @@ const session = require('express-session');
 const routes = require('./routes');
 require('dotenv').config();
 
+const enrichUserContext = require('./middlewares/enrichUser.context');
 const pool = require('./config/db');
 const app = express();
 const PORT = process.env.PORT || 3005;
@@ -29,7 +30,10 @@ const corsOptions = {
   },
   credentials: true,
 };
+// Extract user's IP address and agent
+app.use(enrichUserContext);
 
+// Handle origins
 app.use(cors(corsOptions));
 
 // Middleware to parse JSON

@@ -1,5 +1,7 @@
 const { User } = require('../models');
+const activityTrackerService = require('../services/activityTracker.service');
 const { Op } = require('sequelize');
+
 
 class UserRepository {
   /**
@@ -7,8 +9,17 @@ class UserRepository {
    * @param {Object} userData - The user data to create
    * @returns {Promise<User>}
    */
-  async create(userData) {
-    return await User.create(userData);
+  async create(userData, userContext) {
+    const result = await User.create(userData);
+    await activityTrackerService.logActivity({
+      userId: userContext.id,
+      model: "User",
+      action: 'CREATE',
+      description: `Created a new User ${userData}`,
+      ipAddress: userContext.ip,
+      userAgent: userContext.userAgent
+    });
+    return result
   }
 
   /**
@@ -16,8 +27,17 @@ class UserRepository {
    * @param {string} id - UUID of the user
    * @returns {Promise<User|null>}
    */
-  async findById(id) {
-    return await User.findByPk(id);
+  async findById(id, userContext) {
+    const result = await User.findByPk(id);
+    await activityTrackerService.logActivity({
+      userId: userContext.id,
+      model: "User",
+      action: 'GET',
+      description: `Get a user of ${id}`,
+      ipAddress: userContext.ip,
+      userAgent: userContext.userAgent
+    });
+    return result;
   }
 
   /**
@@ -28,7 +48,7 @@ class UserRepository {
    * @param {Object} params - Query filters
    * @returns {Promise<User[]>}
    */
-  async findByQuery(params = {}) {
+  async findByQuery(params = {}, userContext) {
     const whereClause = {};
 
     for (const [key, value] of Object.entries(params)) {
@@ -42,7 +62,16 @@ class UserRepository {
       }
     }
 
-    return await User.findAll({ where: whereClause });
+    const result = await User.findAll({ where: whereClause });
+    await activityTrackerService.logActivity({
+      userId: userContext.id,
+      model: "User",
+      action: 'GET',
+      description: `Get users ${result}`,
+      ipAddress: userContext.ip,
+      userAgent: userContext.userAgent
+    });
+    return result;
   }
 
   /**
@@ -51,8 +80,17 @@ class UserRepository {
    * @param {Object} updates - Data to update
    * @returns {Promise<[number, User[]]>}
    */
-  async updateById(id, updates) {
-    return await User.update(updates, { where: { id }, returning: true });
+  async updateById(id, updates, userContext) {
+    const result = await User.update(updates, { where: { id }, returning: true });
+    await activityTrackerService.logActivity({
+      userId: userContext.id,
+      model: "User",
+      action: 'UPDATE',
+      description: `Update user of ID: ${id}, Payload: ${updates}`,
+      ipAddress: userContext.ip,
+      userAgent: userContext.userAgent
+    });
+    return result;
   }
 
   /**
@@ -60,8 +98,17 @@ class UserRepository {
    * @param {string} id - UUID of the user
    * @returns {Promise<number>} Number of deleted rows
    */
-  async deleteById(id) {
-    return await User.destroy({ where: { id } });
+  async deleteById(id, userContext) {
+    const result = await User.destroy({ where: { id } });
+    await activityTrackerService.logActivity({
+      userId: userContext.id,
+      model: "User",
+      action: 'DELETE',
+      description: `Delete user of ID: ${id}.`,
+      ipAddress: userContext.ip,
+      userAgent: userContext.userAgent
+    });
+    return result;
   }
 }
 
