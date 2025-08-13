@@ -3,7 +3,7 @@ const InstitutionService = require('../services/institution.service');
 class InstitutionController {
   async create(req, res, next) {
     try {
-      const institution = await InstitutionService.createInstitution(req.body);
+      const institution = await InstitutionService.createInstitution(req.body, req.user);
       res.status(201).json(institution);
     } catch (err) {
       next(err);
@@ -12,7 +12,7 @@ class InstitutionController {
 
   async getById(req, res, next) {
     try {
-      const institution = await InstitutionService.getInstitutionById(req.params.id);
+      const institution = await InstitutionService.getInstitutionById(req.params.id, req.user);
       if (!institution) {
         return res.status(404).json({ message: 'Institution not found' });
       }
@@ -24,7 +24,7 @@ class InstitutionController {
 
   async search(req, res, next) {
     try {
-      const institutions = await InstitutionService.searchInstitutions(req.query);
+      const institutions = await InstitutionService.searchInstitutions(req.query, req.user);
       res.json(institutions);
     } catch (err) {
       next(err);
@@ -33,7 +33,7 @@ class InstitutionController {
 
   async update(req, res, next) {
     try {
-      const updated = await InstitutionService.updateInstitution(req.params.id, req.body);
+      const updated = await InstitutionService.updateInstitution(req.params.id, req.body, req.user);
       if (!updated) {
         return res.status(404).json({ message: 'Institution not found' });
       }
@@ -45,7 +45,7 @@ class InstitutionController {
 
   async delete(req, res, next) {
     try {
-      const deleted = await InstitutionService.deleteInstitution(req.params.id);
+      const deleted = await InstitutionService.deleteInstitution(req.params.id, req.user);
       if (!deleted) {
         return res.status(404).json({ message: 'Institution not found' });
       }

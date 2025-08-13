@@ -17,6 +17,18 @@ class InstitutionValidation {
 
   updateRules() {
     return [
+      body('name')
+        .optional()
+        .isString()
+        .withMessage('Name is required'),
+      body('county')
+        .optional()
+        .isString()
+        .withMessage('County is required'),
+      body('subCounty')
+        .optional()
+        .isString()
+        .withMessage('Sub-county is required'),
       body('type')
         .optional()
         .isIn(['university', 'college', 'TVET', 'polytechnic'])
