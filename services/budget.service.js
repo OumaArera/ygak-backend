@@ -1,23 +1,27 @@
 const budgetRepository = require('../repositories/budget.repository');
-const { saveBudgetFile } = require('../utils/fileStorage');
+const { saveFile } = require('../utils/fileStorage');
 
 class BudgetService {
   async createBudget(data, userContext) {
     try {
+      const address = 'assets/accounts';
       // Handle files asynchronously if provided
       if (data.invoice && data.invoice.buffer) {
-        data.invoice = await saveBudgetFile(
+        data.invoice = await saveFile(
           data.invoice.buffer,
           data.invoice.originalname,
-          process.env.BASE_URL
+          process.env.BASE_URL,
+          address
+
         );
       }
 
       if (data.receipt && data.receipt.buffer) {
-        data.receipt = await saveBudgetFile(
+        data.receipt = await saveFile(
           data.receipt.buffer,
           data.receipt.originalname,
-          process.env.BASE_URL
+          process.env.BASE_URL,
+          address
         );
       }
 
@@ -48,20 +52,23 @@ class BudgetService {
 
   async updateBudget(id, updates, userContext) {
     try {
+      const address = 'assets/accounts';
       // Handle files asynchronously if provided
       if (updates.invoice && updates.invoice.buffer) {
-        updates.invoice = await saveBudgetFile(
+        updates.invoice = await saveFile(
           updates.invoice.buffer,
           updates.invoice.originalname,
-          process.env.BASE_URL
+          process.env.BASE_URL,
+          address
         );
       }
 
       if (updates.receipt && updates.receipt.buffer) {
-        updates.receipt = await saveBudgetFile(
+        updates.receipt = await saveFile(
           updates.receipt.buffer,
           updates.receipt.originalname,
-          process.env.BASE_URL
+          process.env.BASE_URL,
+          address
         );
       }
 

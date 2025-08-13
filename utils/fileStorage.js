@@ -2,9 +2,9 @@ const fs = require('fs').promises;
 const path = require('path');
 const crypto = require('crypto');
 
-const saveBudgetFile = async (fileBuffer, originalName, baseUrl) => {
+const saveFile = async (fileBuffer, originalName, baseUrl, address) => {
   try {
-    const folderPath = path.join(__dirname, '../assets/accounts');
+    const folderPath = path.join(__dirname, `../${address}`);
 
     // Ensure the folder exists (async)
     try {
@@ -24,7 +24,7 @@ const saveBudgetFile = async (fileBuffer, originalName, baseUrl) => {
     await fs.writeFile(filePath, fileBuffer);
 
     // Return full URL for browser access
-    return `${baseUrl}/assets/accounts/${fileName}`;
+    return `${baseUrl}/${address}/${fileName}`;
   } catch (error) {
     console.error('Error saving file:', error);
     throw new Error('Failed to save file');
@@ -34,15 +34,14 @@ const saveBudgetFile = async (fileBuffer, originalName, baseUrl) => {
 // Optional: Add file deletion utility for cleanup
 const deleteFile = async (fileUrl, baseUrl) => {
   try {
-    const fileName = fileUrl.replace(`${baseUrl}/assets/accounts/`, '');
-    const filePath = path.join(__dirname, '../assets/accounts', fileName);
+    const fileName = fileUrl.replace(`${baseUrl}/${address}/`, '');
+    const filePath = path.join(__dirname, `../${address}`, fileName);
     
     try {
       await fs.access(filePath);
       await fs.unlink(filePath);
       return true;
     } catch {
-      // File doesn't exist, which is fine
       return false;
     }
   } catch (error) {
@@ -52,6 +51,6 @@ const deleteFile = async (fileUrl, baseUrl) => {
 };
 
 module.exports = { 
-  saveBudgetFile,
+  saveFile,
   deleteFile 
 };
