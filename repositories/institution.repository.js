@@ -8,7 +8,7 @@ class InstitutionRepository {
       userId: userContext.id,
       model: "Institution",
       action: 'CREATE',
-      description: `Created a new institution ${data}`,
+      description: `Created a new institution ${JSON.stringify(data)}`,
       ipAddress: userContext.ip,
       userAgent: userContext.userAgent
     });
@@ -49,7 +49,7 @@ class InstitutionRepository {
       userId: userContext.id,
       model: "Institution",
       action: 'UPDATE',
-      description: `Update institution of ID: ${id}, Payload: ${updates}`,
+      description: `Update institution of ID: ${id}, Payload: ${JSON.stringify(updates)}`,
       ipAddress: userContext.ip,
       userAgent: userContext.userAgent
     });

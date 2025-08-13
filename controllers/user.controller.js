@@ -4,63 +4,63 @@ class UserController {
   /**
    * Create a new user
    */
-  async createUser(req, res, next) {
+  async createUser(req, res) {
     try {
       const newUser = await UserService.createUser(req.body, req.user);
-      res.status(201).json(newUser);
+      res.status(201).json({success: true, data:newUser});
     } catch (err) {
-      next(err);
+      res.status(500).json({success: false, error:err.message});
     }
   }
 
   /**
    * Get a single user by ID
    */
-  async getUserById(req, res, next) {
+  async getUserById(req, res) {
     try {
       const user = await UserService.getUserById(req.params.id, req.user);
       if (!user) {
-        return res.status(404).json({ error: 'User not found' });
+        return res.status(404).json({success: false, error: 'User not found' });
       }
-      res.json(user);
+      res.status(200).json({success: true, data:user});
     } catch (err) {
-      next(err);
+      res.status(500).json({success: false, error:err.message});
     }
   }
 
   /**
    * Search/filter users
    */
-  async searchUsers(req, res, next) {
+  async searchUsers(req, res) {
     try {
       const users = await UserService.searchUsers(req.query, req.user);
-      res.json(users);
+      res.status(200).json({success: true, data:users});
     } catch (err) {
-      next(err);
+      res.status(500).json({success: false, error:err.message});
     }
   }
 
   /**
    * Update a user
    */
-  async updateUser(req, res, next) {
+  async updateUser(req, res) {
     try {
       const updatedUser = await UserService.updateUser(req.params.id, req.body, req.user);
-      res.json(updatedUser);
+      res.status(200).json({success: true, data: updatedUser});
     } catch (err) {
-      next(err);
+      res.status(500).json({success: false, error: err.message});
     }
   }
 
   /**
    * Delete a user
    */
-  async deleteUser(req, res, next) {
+  async deleteUser(req, res) {
     try {
       const deleted = await UserService.deleteUser(req.params.id, req.user);
-      res.json(deleted);
+      res.status(204).json({success: true, data: deleted});
     } catch (err) {
-      next(err);
+      res.status(500).json({success: false, error: err.message});
     }
   }
 }

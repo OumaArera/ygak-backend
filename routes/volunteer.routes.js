@@ -2,12 +2,12 @@ const express = require('express');
 const router = express.Router();
 const { validationResult } = require('express-validator');
 
-const UserController = require('../controllers/user.controller');
-const UserValidation = require('../dtos/user.dto');
+const VolunteerController = require('../controllers/volunteer.controller');
+const VolunteerValidation = require('../dtos/volunteer.dto'); // Assuming you'll create this DTO
 const { authenticateToken } = require('../middlewares/auth.middleware');
 const { authorizeRolesFromMapping } = require('../middlewares/roles.middleware');
-const { conditionalSuperuserAccess } = require('../middlewares/conditionalSuperuser.middleware');
 
+// Validation error handler
 const validate = (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
@@ -16,42 +16,45 @@ const validate = (req, res, next) => {
   next();
 };
 
+// Routes
 router.post(
   '/',
-  conditionalSuperuserAccess,
-  UserValidation.createRules(),
-  UserController.createUser
+  authenticateToken,
+  VolunteerValidation.createRules(),
+  validate,
+  authorizeRolesFromMapping('AllUsers'),
+  VolunteerController.create
 );
 
 router.get(
   '/',
   authenticateToken,
+  VolunteerValidation.queryRules(),
   authorizeRolesFromMapping('AllBoardMembers'),
-  UserController.searchUsers
+  VolunteerController.search
 );
 
 router.get(
   '/:id',
   authenticateToken,
   authorizeRolesFromMapping('AllBoardMembers'),
-  UserController.getUserById
+  VolunteerController.getById
 );
 
 router.put(
   '/:id',
   authenticateToken,
-  UserValidation.updateRules(),
+  VolunteerValidation.updateRules(),
   validate,
   authorizeRolesFromMapping('ITSuperuserAccess'),
-  UserController.updateUser
+  VolunteerController.update
 );
 
 router.delete(
   '/:id',
   authenticateToken,
-  conditionalSuperuserAccess,
   authorizeRolesFromMapping('ITSuperuserAccess'),
-  UserController.deleteUser
+  VolunteerController.delete
 );
 
 module.exports = router;

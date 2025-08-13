@@ -1,57 +1,57 @@
 const InstitutionService = require('../services/institution.service');
 
 class InstitutionController {
-  async create(req, res, next) {
+  async create(req, res) {
     try {
       const institution = await InstitutionService.createInstitution(req.body, req.user);
-      res.status(201).json(institution);
+      res.status(201).json({success: true, data: institution});
     } catch (err) {
-      next(err);
+      res.status(500).json({success: false, error:err.message});
     }
   }
 
-  async getById(req, res, next) {
+  async getById(req, res) {
     try {
       const institution = await InstitutionService.getInstitutionById(req.params.id, req.user);
       if (!institution) {
-        return res.status(404).json({ message: 'Institution not found' });
+        return res.status(404).json({success: false, error: 'Institution not found' });
       }
-      res.json(institution);
+      res.status(200).json({success: true, data: institution});
     } catch (err) {
-      next(err);
+      res.status(500).json({success: false, error:err.message});
     }
   }
 
-  async search(req, res, next) {
+  async search(req, res) {
     try {
       const institutions = await InstitutionService.searchInstitutions(req.query, req.user);
-      res.json(institutions);
+      res.status(200).json({success: true, data: institutions});
     } catch (err) {
-      next(err);
+      res.status(500).json({success: false, error:err.message});
     }
   }
 
-  async update(req, res, next) {
+  async update(req, res) {
     try {
       const updated = await InstitutionService.updateInstitution(req.params.id, req.body, req.user);
       if (!updated) {
-        return res.status(404).json({ message: 'Institution not found' });
+        return res.status(404).json({success: false, error: 'Institution not found' });
       }
-      res.json(updated);
+      res.status(200).json({success: true, data: updated});
     } catch (err) {
-      next(err);
+      res.status(500).json({success: false, error:err.message});
     }
   }
 
-  async delete(req, res, next) {
+  async delete(req, res) {
     try {
       const deleted = await InstitutionService.deleteInstitution(req.params.id, req.user);
       if (!deleted) {
-        return res.status(404).json({ message: 'Institution not found' });
+        return res.status(404).json({success: false, error: 'Institution not found' });
       }
-      res.json({ message: 'Institution deleted successfully' });
+      res.status(204).json({success: true, error: 'Institution deleted successfully' });
     } catch (err) {
-      next(err);
+      res.status(500).json({success: false, error:err.message});
     }
   }
 }

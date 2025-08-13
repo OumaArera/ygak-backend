@@ -15,7 +15,7 @@ class UserRepository {
       userId: userContext.id,
       model: "User",
       action: 'CREATE',
-      description: `Created a new User ${userData}`,
+      description: `Created a new User ${JSON.stringify(userData)}`,
       ipAddress: userContext.ip,
       userAgent: userContext.userAgent
     });
@@ -67,7 +67,7 @@ class UserRepository {
       userId: userContext.id,
       model: "User",
       action: 'GET',
-      description: `Get users ${result}`,
+      description: `Get users ${JSON.stringify(result)}`,
       ipAddress: userContext.ip,
       userAgent: userContext.userAgent
     });
@@ -86,7 +86,7 @@ class UserRepository {
       userId: userContext.id,
       model: "User",
       action: 'UPDATE',
-      description: `Update user of ID: ${id}, Payload: ${updates}`,
+      description: `Update user of ID: ${id}, Payload: ${JSON.stringify(updates)}`,
       ipAddress: userContext.ip,
       userAgent: userContext.userAgent
     });
