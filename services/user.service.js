@@ -6,7 +6,7 @@ class UserService {
   /**
    * Create a new user
    */
-  async createUser(userData) {
+  async createUser(userData, userContext) {
     const password = generateRandomPassword();
     console.log("Password: ", password)
     // Check and assign regNumber
@@ -20,35 +20,35 @@ class UserService {
       ...userData,
       regNumber,
       password
-    });
+    }, userContext);
   }
 
   /**
    * Get a user by ID
    */
-  async getUserById(id) {
-    return await userRepository.findById(id);
+  async getUserById(id, userContext) {
+    return await userRepository.findById(id, userContext);
   }
 
   /**
    * Search users based on query params
    */
-  async searchUsers(queryParams) {
-    return await userRepository.findByQuery(queryParams);
+  async searchUsers(queryParams, userContext) {
+    return await userRepository.findByQuery(queryParams, userContext);
   }
 
   /**
    * Update a user
    */
-  async updateUser(id, updates) {
-    return await userRepository.updateById(id, updates);
+  async updateUser(id, updates, userContext) {
+    return await userRepository.updateById(id, updates, userContext);
   }
 
   /**
    * Delete a user
    */
-  async deleteUser(id) {
-    return await userRepository.deleteById(id);
+  async deleteUser(id, userContext) {
+    return await userRepository.deleteById(id, userContext);
   }
 }
 
