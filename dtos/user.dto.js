@@ -33,8 +33,9 @@ class UserDTO {
         .withMessage('Valid email is required'),
 
       body('regNumber')
-        .optional()
-        .isString(),
+        .notEmpty()
+        .isString()
+        .withMessage('Registration number is required'),
 
       body('designation')
         .isIn(['Board Member', 'Secretariat', 'Chapter', 'IT'])

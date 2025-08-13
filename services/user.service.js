@@ -1,6 +1,7 @@
 const userRepository = require('../repositories/user.repository');
-const generateRegistrationNumber = require('../utils/regNumberGenerator');
 const { generateRandomPassword } = require('../utils/generatePassword');
+const { generateAccountCredentialsEmail } = require('../utils/password.html');
+const { sendEmail } = require('../utils/email.util');
 
 class UserService {
   /**
@@ -8,17 +9,22 @@ class UserService {
    */
   async createUser(userData, userContext) {
     const password = generateRandomPassword();
-    console.log("Password: ", password)
-    // Check and assign regNumber
-    let regNumber = userData.regNumber;
-    if (!regNumber || regNumber.trim() === '') {
-      regNumber = await generateRegistrationNumber();
-    }
+    console.log("Password: ", password);
+    const emailHtml = generateAccountCredentialsEmail(
+      userData.firstName,
+      userData.email,
+      password
+    );
+    // Send the welcome email
+    await sendEmail(
+      userData.email,
+      `${userData.firstName} ${userData.lastName || ''}`.trim(),
+      "Account Creation!",
+      emailHtml,
+    );
 
-    // Create user with all original data, but override regNumber & password
     return await userRepository.create({
       ...userData,
-      regNumber,
       password
     }, userContext);
   }

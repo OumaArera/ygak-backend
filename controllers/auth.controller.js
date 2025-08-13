@@ -4,14 +4,14 @@ class AuthController {
   /**
    * User login
    */
-  async login(req, res, next) {
+  async login(req, res) {
     try {
       const { email, password } = req.body;
       const user = req.user ? req.user : {}
       const token = await AuthService.login(email, password, user);
-      res.json({ token });
+      res.status(200).json({success: true, data: token });
     } catch (err) {
-      next(err);
+      res.status(400).json({success: false, error:err.message});
     }
   }
 
@@ -30,50 +30,50 @@ class AuthController {
   /**
    * Block a user
    */
-  async blockUser(req, res, next) {
+  async blockUser(req, res) {
     try {
       const updatedUser = await AuthService.blockUser(req.params.userId, req.user);
-      res.json(updatedUser);
+      res.status(200).json({success: true, data: updatedUser});
     } catch (err) {
-      next(err);
+      res.status(500).json({success: false, error:err.message});
     }
   }
 
   /**
    * Unblock a user
    */
-  async unblockUser(req, res, next) {
+  async unblockUser(req, res) {
     try {
       const updatedUser = await AuthService.unblockUser(req.params.userId, req.user);
-      res.json(updatedUser);
+      res.status(200).json({success: true, data: updatedUser});
     } catch (err) {
-      next(err);
+      res.status(500).json({success: false, error:err.message});
     }
   }
 
   /**
    * Verify token
    */
-  async verifyToken(req, res, next) {
+  async verifyToken(req, res) {
     try {
       const { token } = req.body;
       const payload = await AuthService.verifyToken(token);
-      res.json(payload);
+      res.status(200).json({success: true, data: payload});
     } catch (err) {
-      next(err);
+      res.status(500).json({success: false, error:err.message});
     }
   }
 
   /**
    * Change password
    */
-  async changePassword(req, res, next) {
+  async changePassword(req, res) {
     try {
       const { oldPassword, newPassword } = req.body;
       const result = await AuthService.changePassword(req.user.id, oldPassword, newPassword, req.user);
-      res.json(result);
+      res.status(200).json({success: true, data: result});
     } catch (err) {
-      next(err);
+      res.status(400).json({success: false, error:err.message});
     }
   }
 }
