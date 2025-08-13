@@ -7,7 +7,6 @@ const { generateWelcomeEmail } = require('../utils/welcomeEmail.html');
 
 class VolunteerService {
   async createVolunteer(data, userContext) {
-    // const regNumber = await generateRegistrationNumber();
     let regNumber = data.regNumber;
     if (!regNumber || regNumber.trim() === '') {
       regNumber = await generateRegistrationNumber();

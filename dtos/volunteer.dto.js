@@ -7,7 +7,6 @@ class VolunteerDTO {
    */
   static createRules() {
     return [
-      // Personal Information
       body('firstName')
         .isString()
         .notEmpty()
