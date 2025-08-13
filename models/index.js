@@ -4,6 +4,7 @@ const Token = require('./token.model');
 const Institution = require('./institution.model');
 const ActivityTracker = require('./activityTracker.model');
 const Volunteer = require('./volunteer.model');
+const Budget = require('./budget.model');
 
 User.hasMany(Token, { foreignKey: 'userId', as: 'tokens' });
 Token.belongsTo(User, { foreignKey: 'userId', as: 'users' });
@@ -14,11 +15,15 @@ ActivityTracker.belongsTo(User, { foreignKey: 'userId', as: 'users' });
 Institution.hasMany(Volunteer, { foreignKey: 'institutionId', as: 'volunteers' });
 Volunteer.belongsTo(Institution, { foreignKey: 'institutionId', as: 'institution' });
 
+User.hasMany(Budget, { foreignKey: 'userId', as: 'budgets' });
+Budget.belongsTo(User, { foreignKey: 'userId', as: 'users' });
+
 module.exports = {
   sequelize,
   User,
   Token,
   Institution,
   ActivityTracker,
-  Volunteer 
+  Volunteer,
+  Budget
 };

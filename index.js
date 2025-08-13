@@ -1,4 +1,5 @@
 const express = require('express');
+const path = require('path');
 const cors = require('cors');
 const session = require('express-session');
 const routes = require('./routes');
@@ -18,7 +19,6 @@ const allowedOrigins = [
   process.env.CORS_ORIGIN_4,
 ].filter(Boolean);
 
-
 // CORS config
 const corsOptions = {
   origin: function (origin, callback) {
@@ -30,36 +30,26 @@ const corsOptions = {
   },
   credentials: true,
 };
+
+
+// Serve static files
+app.use('/assets', express.static(path.join(__dirname, 'assets')));
+
 // Extract user's IP address and agent
 app.use(enrichUserContext);
 
 // Handle origins
 app.use(cors(corsOptions));
 
-// Middleware to parse JSON
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+// Increase payload limits for file uploads
+app.use(express.json({ limit: '50mb' }));
+app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 
 app.use(session({
   secret: process.env.SESSION_SECRET,
   resave: false,
   saveUninitialized: true,
 }));
-
-
-pool.query('SELECT NOW()')
-  .then(result => {
-    console.log('Database connected successfully at:', result.rows[0].now);
-
-    // Start server only after DB is confirmed
-    app.listen(PORT, () => {
-      console.log(`Server running on port ${PORT}`);
-    });
-  })
-  .catch(err => {
-    console.error('Database connection failed:', err);
-    process.exit(1); // stop app if DB connection fails
-  });
 
 // Routes
 app.use('/api/v1', routes);
@@ -80,13 +70,41 @@ app.use((req, res, next) => {
 // General error-handling middleware
 app.use((err, req, res, next) => {
   console.error('Unexpected error:', err);
+  
+  // Handle multer errors specifically
+  if (err.code === 'LIMIT_FILE_SIZE') {
+    return res.status(413).json({
+      error: 'File too large',
+      message: 'File size exceeds the maximum limit'
+    });
+  }
+  
+  if (err.code === 'LIMIT_UNEXPECTED_FILE') {
+    return res.status(400).json({
+      error: 'Invalid file field',
+      message: 'Unexpected file field in request'
+    });
+  }
+  
   res.status(500).json({
     error: 'Internal Server Error',
     message: err.message || 'An unexpected error occurred',
   });
 });
 
-// Start server
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
+// Start server only once - after DB connection
+pool.query('SELECT NOW()')
+  .then(result => {
+    console.log('Database connected successfully at:', result.rows[0].now);
+
+    const server = app.listen(PORT, () => {
+      console.log(`Server running on port ${PORT}`);
+    });
+    
+    // Set server timeout
+    server.timeout = 60000; 
+  })
+  .catch(err => {
+    console.error('Database connection failed:', err);
+    process.exit(1);
+  });
