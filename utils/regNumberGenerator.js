@@ -1,4 +1,5 @@
-const User = require('../models/user.model');
+// const User = require('../models/user.model');
+const Volunteer = require('../models/volunteer.model');
 const { Op } = require('sequelize');
 
 async function generateRegistrationNumber() {
@@ -10,7 +11,7 @@ async function generateRegistrationNumber() {
   const prefix = `YGAK/${year}/${month}/`;
 
   // Find the latest user with matching year/month
-  const latestUser = await User.findOne({
+  const volunteer = await Volunteer.findOne({
     where: {
       regNumber: { [Op.like]: `${prefix}%` }
     },
@@ -18,8 +19,8 @@ async function generateRegistrationNumber() {
   });
 
   let nextNumber = 1;
-  if (latestUser) {
-    const lastRegNumber = latestUser.regNumber;
+  if (volunteer) {
+    const lastRegNumber = volunteer.regNumber;
     const lastNumberPart = parseInt(lastRegNumber.split('/').pop(), 10);
     nextNumber = lastNumberPart + 1;
   }

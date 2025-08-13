@@ -7,7 +7,7 @@ class ActivityTrackerController {
       const activities = await activityTrackerService.getActivities({ startDate, endDate, model, userId });
       res.json({ success: true, data: activities });
     } catch (error) {
-      res.status(500).json({ success: false, message: error.message });
+      res.status(500).json({ success: false, error: error.message });
     }
   }
 }

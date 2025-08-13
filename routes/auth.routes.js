@@ -5,6 +5,7 @@ const { validationResult } = require('express-validator');
 const AuthController = require('../controllers/auth.controller');
 const AuthValidation = require('../dtos/auth.dto');
 const { authenticateToken } = require('../middlewares/auth.middleware');
+const { authorizeRolesFromMapping } = require('../middlewares/roles.middleware');
 
 // Helper for validation errors
 const validate = (req, res, next) => {
@@ -15,7 +16,6 @@ const validate = (req, res, next) => {
   next();
 };
 
-// Login
 router.post(
   '/login',
   AuthValidation.loginRules(),
@@ -23,7 +23,6 @@ router.post(
   AuthController.login
 );
 
-// Change password (logged in users only)
 router.patch(
   '/change-password',
   authenticateToken,
@@ -32,30 +31,28 @@ router.patch(
   AuthController.changePassword
 );
 
-// Block a user (SUPERUSER only)
 router.patch(
   '/:id/block',
   authenticateToken,
-  // allowRoles('SUPERUSER'),
+  authorizeRolesFromMapping('ITSuperuserAccess'),
   AuthController.blockUser
 );
 
-// Unblock a user (SUPERUSER only)
 router.patch(
   '/:id/unblock',
   authenticateToken,
-  // allowRoles('SUPERUSER'),
+  authorizeRolesFromMapping('ITSuperuserAccess'),
   AuthController.unblockUser
 );
 
-// Optional logout route
+
 router.post(
   '/logout',
   authenticateToken,
   AuthController.logout
 );
 
-// Optional token verification route
+
 router.post(
   '/verify-token',
   validate,
