@@ -326,6 +326,7 @@ class BudgetDTO {
         'Disbursed Pending Receipts',
         'Closed'
       ]),
+      c
     ];
   }
 }

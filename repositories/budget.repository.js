@@ -1,6 +1,7 @@
 const { Budget, User } = require('../models');
 const activityTrackerService = require('../services/activityTracker.service');
 const { Op } = require('sequelize');
+const paginationUtil = require('../utils/pagination');
 
 class BudgetRepository {
   async create(data, userContext) {
@@ -43,9 +44,10 @@ class BudgetRepository {
   }
 
   async findByQuery(query, userContext) {
+    const { page, limit, ...filters } = query;
     const where = {};
 
-    for (const [key, value] of Object.entries(query)) {
+    for (const [key, value] of Object.entries(filters)) {
       if (typeof value === 'string') {
         where[key] = { [Op.iLike]: `%${value}%` };
       } else {
@@ -53,16 +55,18 @@ class BudgetRepository {
       }
     }
 
-    const result = await Budget.findAll({
+    const result = await paginationUtil.paginate(Budget, {
+      where,
       attributes: { exclude: ['userId'] },
-      where: where,
       include: [
         {
           model: User,
           as: 'users',
           attributes: { exclude: ['password'] }
         }
-      ]
+      ],
+      page,
+      limit
     });
 
     await activityTrackerService.logActivity({
@@ -76,6 +80,7 @@ class BudgetRepository {
 
     return result;
   }
+
 
   async updateById(id, updates, userContext) {
     const budget = await Budget.findByPk(id);

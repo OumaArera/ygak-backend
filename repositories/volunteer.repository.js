@@ -1,6 +1,7 @@
 const { Volunteer, Institution } = require('../models');
 const activityTrackerService = require('../services/activityTracker.service');
 const { Op } = require('sequelize');
+const paginationUtil = require('../utils/pagination');
 
 class VolunteerRepository {
   async create(data, userContext) {
@@ -40,25 +41,28 @@ class VolunteerRepository {
   }
 
   async findByQuery(query, userContext) {
+    const { page, limit, ...filters } = query;
     const where = {};
 
-    for (const [key, value] of Object.entries(query)) {
+    for (const [key, value] of Object.entries(filters)) {
       if (typeof value === 'string') {
-        where[key] = { [Op.iLike]: `%${value}%` }; 
+        where[key] = { [Op.iLike]: `%${value}%` };
       } else {
         where[key] = value;
       }
     }
 
-    const result = await Volunteer.findAll({
-      where: where,
+    const result = await paginationUtil.paginate(Volunteer, {
+      where,
       attributes: { exclude: ['institutionId'] },
       include: [
         {
           model: Institution,
           as: 'institution',
         }
-      ]
+      ],
+      page,
+      limit
     });
 
     await activityTrackerService.logActivity({
@@ -72,6 +76,7 @@ class VolunteerRepository {
 
     return result;
   }
+
 
   async updateById(id, updates, userContext) {
     const volunteer = await Volunteer.findByPk(id);
