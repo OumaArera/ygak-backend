@@ -1,13 +1,15 @@
+// routes/task.routes.js
+
 const express = require('express');
 const router = express.Router();
 const { validationResult } = require('express-validator');
 
-const UserController = require('../controllers/user.controller');
-const UserValidation = require('../deserializers/user.deserializer');
+const TaskController = require('../controllers/task.controller');
+const TaskValidation = require('../deserializers/task.deserializer');
 const { authenticateToken } = require('../middlewares/auth.middleware');
 const { authorizeRolesFromMapping } = require('../middlewares/roles.middleware');
-const { conditionalSuperuserAccess } = require('../middlewares/conditionalSuperuser.middleware');
 
+// Validation error handler
 const validate = (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
@@ -16,42 +18,44 @@ const validate = (req, res, next) => {
   next();
 };
 
+// Routes
 router.post(
   '/',
-  conditionalSuperuserAccess,
-  UserValidation.createRules(),
-  UserController.createUser
+  authenticateToken,
+  TaskValidation.createRules(),
+  validate,
+  authorizeRolesFromMapping('AllUsers'),
+  TaskController.create
 );
 
 router.get(
   '/',
   authenticateToken,
-  authorizeRolesFromMapping('AllBoardMembers'),
-  UserController.searchUsers
+  authorizeRolesFromMapping('AllUsers'),
+  TaskController.search
 );
 
 router.get(
   '/:id',
   authenticateToken,
-  authorizeRolesFromMapping('AllBoardMembers'),
-  UserController.getUserById
+  authorizeRolesFromMapping('AllUsers'),
+  TaskController.getById
 );
 
 router.put(
   '/:id',
   authenticateToken,
-  UserValidation.updateRules(),
+  TaskValidation.updateRules(),
   validate,
   authorizeRolesFromMapping('ITSuperuserAccess'),
-  UserController.updateUser
+  TaskController.update
 );
 
 router.delete(
   '/:id',
   authenticateToken,
-  conditionalSuperuserAccess,
   authorizeRolesFromMapping('ITSuperuserAccess'),
-  UserController.deleteUser
+  TaskController.delete
 );
 
 module.exports = router;

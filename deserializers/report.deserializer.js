@@ -1,6 +1,6 @@
 const { body, query } = require('express-validator');
 
-class ReportDTO {
+class ReportDeserializer {
   /**
    * Validation rules for creating a report
    */
@@ -16,6 +16,11 @@ class ReportDTO {
         .optional()
         .isUUID()
         .withMessage('Budget ID must be a valid UUID'),
+
+      body('taskId')
+        .isUUID()
+        .notEmpty()
+        .withMessage('Task ID must be a valid UUID'),
 
       // Content
       body('title')
@@ -84,6 +89,7 @@ class ReportDTO {
     return [
       body('userId').optional().isUUID(),
       body('budgetId').optional().isUUID(),
+      body('taskId').optional().isUUID(),
       body('title').optional().isString().notEmpty(),
       body('content')
         .optional()
@@ -154,4 +160,4 @@ class ReportDTO {
   }
 }
 
-module.exports = ReportDTO;
+module.exports = ReportDeserializer;

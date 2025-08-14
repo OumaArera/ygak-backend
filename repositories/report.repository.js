@@ -1,4 +1,4 @@
-const { Report, User, Budget } = require('../models');
+const { Report, User, Budget, Task } = require('../models');
 const activityTrackerService = require('../services/activityTracker.service');
 const { Op } = require('sequelize');
 const paginationUtil = require('../utils/pagination');
@@ -25,12 +25,16 @@ class ReportRepository {
       include: [
         {
           model: User,
-          as: 'user',
+          as: 'reportee',
           attributes: { exclude: ['password'] }
         },
         {
           model: Budget,
           as: 'budget'
+        },
+        {
+          model: Task,
+          as: 'task'
         }
       ]
     });
@@ -65,12 +69,16 @@ class ReportRepository {
       include: [
         {
           model: User,
-          as: 'user',
+          as: 'reportee',
           attributes: { exclude: ['password'] }
         },
         {
           model: Budget,
           as: 'budget'
+        },
+        {
+          model: Task,
+          as: 'task'
         }
       ],
       page,

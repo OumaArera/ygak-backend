@@ -1,17 +1,17 @@
-const { Budget, User } = require('../models');
+const { Task, User } = require('../models');
 const activityTrackerService = require('../services/activityTracker.service');
 const { Op } = require('sequelize');
 const paginationUtil = require('../utils/pagination');
 
-class BudgetRepository {
+class TaskRepository {
   async create(data, userContext) {
-    const result = await Budget.create(data);
+    const result = await Task.create(data);
 
     await activityTrackerService.logActivity({
       userId: userContext.id,
-      model: "Budget",
+      model: "Task",
       action: 'CREATE',
-      description: `Created a new budget with data: ${JSON.stringify(data)}`,
+      description: `Created a new task with data: ${JSON.stringify(data)}`,
       ipAddress: userContext.ip,
       userAgent: userContext.userAgent
     });
@@ -20,12 +20,12 @@ class BudgetRepository {
   }
 
   async findById(id, userContext) {
-    const result = await Budget.findByPk(id, {
-      attributes: { exclude: ['userId'] },
+    const result = await Task.findByPk(id, {
+      attributes: { exclude: ['assignedTo'] },
       include: [
         {
           model: User,
-          as: 'requestee', 
+          as: 'assignee',
           attributes: { exclude: ['password'] }
         }
       ]
@@ -33,9 +33,9 @@ class BudgetRepository {
 
     await activityTrackerService.logActivity({
       userId: userContext.id,
-      model: "Budget",
+      model: "Task",
       action: 'GET',
-      description: `Fetched budget with ID: ${id}`,
+      description: `Fetched task with ID: ${id}`,
       ipAddress: userContext.ip,
       userAgent: userContext.userAgent
     });
@@ -55,13 +55,13 @@ class BudgetRepository {
       }
     }
 
-    const result = await paginationUtil.paginate(Budget, {
+    const result = await paginationUtil.paginate(Task, {
       where,
-      attributes: { exclude: ['userId'] },
+      attributes: { exclude: ['assignedTo'] },
       include: [
         {
           model: User,
-          as: 'requestee',
+          as: 'assignee',
           attributes: { exclude: ['password'] }
         }
       ],
@@ -71,9 +71,9 @@ class BudgetRepository {
 
     await activityTrackerService.logActivity({
       userId: userContext.id,
-      model: "Budget",
+      model: "Task",
       action: 'GET',
-      description: `Queried budgets with params: ${JSON.stringify(query)}`,
+      description: `Queried tasks with params: ${JSON.stringify(query)}`,
       ipAddress: userContext.ip,
       userAgent: userContext.userAgent
     });
@@ -81,18 +81,17 @@ class BudgetRepository {
     return result;
   }
 
-
   async updateById(id, updates, userContext) {
-    const budget = await Budget.findByPk(id);
-    if (!budget) return null;
+    const task = await Task.findByPk(id);
+    if (!task) return null;
 
-    const result = await budget.update(updates);
+    const result = await task.update(updates);
 
     await activityTrackerService.logActivity({
       userId: userContext.id,
-      model: "Budget",
+      model: "Task",
       action: 'UPDATE',
-      description: `Updated budget with ID: ${id}, Payload: ${JSON.stringify(updates)}`,
+      description: `Updated task with ID: ${id}, Payload: ${JSON.stringify(updates)}`,
       ipAddress: userContext.ip,
       userAgent: userContext.userAgent
     });
@@ -101,22 +100,22 @@ class BudgetRepository {
   }
 
   async deleteById(id, userContext) {
-    const budget = await Budget.findByPk(id);
-    if (!budget) return null;
+    const task = await Task.findByPk(id);
+    if (!task) return null;
 
-    await budget.destroy();
+    await task.destroy();
 
     await activityTrackerService.logActivity({
       userId: userContext.id,
-      model: "Budget",
+      model: "Task",
       action: 'DELETE',
-      description: `Deleted budget with ID: ${id}`,
+      description: `Deleted task with ID: ${id}`,
       ipAddress: userContext.ip,
       userAgent: userContext.userAgent
     });
 
-    return budget;
+    return task;
   }
 }
 
-module.exports = new BudgetRepository();
+module.exports = new TaskRepository();
