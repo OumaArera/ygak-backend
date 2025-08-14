@@ -10,6 +10,7 @@ const volunteerRoutes = require('./volunteer.routes');
 const budgetRoutes = require('./budget.routes');
 const reportRoutes = require('./report.routes');
 const taskRoutes = require('./task.routes');
+const meetingRoutes = require('./meeting.routes');
 
 // Mount routes
 router.use('/users', userRoutes);
@@ -20,5 +21,6 @@ router.use('/volunteers', volunteerRoutes);
 router.use('/budgets', budgetRoutes);
 router.use('/reports', reportRoutes);
 router.use('/tasks', taskRoutes);
+router.use('/meetings', meetingRoutes);
 
 module.exports = router;
