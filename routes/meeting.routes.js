@@ -2,8 +2,8 @@ const express = require('express');
 const router = express.Router();
 const { validationResult } = require('express-validator');
 
-const TaskController = require('../controllers/task.controller');
-const TaskValidation = require('../deserializers/task.deserializer');
+const MeetingController = require('../controllers/meeting.controller');
+const MeetingValidation = require('../deserializers/meeting.deserializer');
 const { authenticateToken } = require('../middlewares/auth.middleware');
 const { authorizeRolesFromMapping } = require('../middlewares/roles.middleware');
 
@@ -20,40 +20,40 @@ const validate = (req, res, next) => {
 router.post(
   '/',
   authenticateToken,
-  TaskValidation.createRules(),
+  MeetingValidation.createRules(),
   validate,
   authorizeRolesFromMapping('BoardSecretaryAccess'),
-  TaskController.create
+  MeetingController.create
 );
 
 router.get(
   '/',
   authenticateToken,
   authorizeRolesFromMapping('AllUsers'),
-  TaskController.search
+  MeetingController.search
 );
 
 router.get(
   '/:id',
   authenticateToken,
   authorizeRolesFromMapping('AllUsers'),
-  TaskController.getById
+  MeetingController.getById
 );
 
 router.put(
   '/:id',
   authenticateToken,
-  TaskValidation.updateRules(),
+  MeetingValidation.updateRules(),
   validate,
   authorizeRolesFromMapping('BoardSecretaryAccess'),
-  TaskController.update
+  MeetingController.update
 );
 
 router.delete(
   '/:id',
   authenticateToken,
-  authorizeRolesFromMapping('ITSuperuserAccess'),
-  TaskController.delete
+  authorizeRolesFromMapping('BoardSecretaryAccess'),
+  MeetingController.delete
 );
 
 module.exports = router;

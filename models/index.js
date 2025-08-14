@@ -7,6 +7,7 @@ const Volunteer = require('./volunteer.model');
 const Budget = require('./budget.model');
 const Report = require('./report.model');
 const Task = require('./task.model');
+const Meeting = require('./meeting.model');
 
 User.hasMany(Token, { foreignKey: 'userId', as: 'tokens' });
 Token.belongsTo(User, { foreignKey: 'userId', as: 'users' });
@@ -41,5 +42,6 @@ module.exports = {
   Volunteer,
   Budget,
   Report,
-  Task
+  Task,
+  Meeting
 };
