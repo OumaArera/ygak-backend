@@ -3,7 +3,7 @@ const router = express.Router();
 const { validationResult } = require('express-validator');
 
 const AuthController = require('../controllers/auth.controller');
-const AuthValidation = require('../dtos/auth.dto');
+const AuthValidation = require('../deserializers/auth.deserializer');
 const { authenticateToken } = require('../middlewares/auth.middleware');
 const { authorizeRolesFromMapping } = require('../middlewares/roles.middleware');
 

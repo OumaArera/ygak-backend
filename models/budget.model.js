@@ -17,6 +17,11 @@ const Budget = sequelize.define('Budget', {
     },
     field: 'user_id',
   },
+   title: {
+    type: DataTypes.STRING,
+    allowNull: false,
+    defaultValue: 'Test Budget',
+  },
   amount: {
     type: DataTypes.DECIMAL(15, 2),
     allowNull: false,

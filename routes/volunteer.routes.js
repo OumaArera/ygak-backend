@@ -3,7 +3,7 @@ const router = express.Router();
 const { validationResult } = require('express-validator');
 
 const VolunteerController = require('../controllers/volunteer.controller');
-const VolunteerValidation = require('../dtos/volunteer.dto'); // Assuming you'll create this DTO
+const VolunteerValidation = require('../deserializers/volunteer.deserializer');
 const { authenticateToken } = require('../middlewares/auth.middleware');
 const { authorizeRolesFromMapping } = require('../middlewares/roles.middleware');
 

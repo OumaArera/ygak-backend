@@ -1,6 +1,6 @@
 const { body, query } = require('express-validator');
 
-class BudgetDTO {
+class BudgetDeserializer {
   /**
    * Validation for creating a budget
    */
@@ -15,6 +15,11 @@ class BudgetDTO {
       body('amount')
         .isDecimal({ decimal_digits: '0,2' })
         .withMessage('Amount must be a decimal with up to two decimal places'),
+      
+      body('title')
+        .isString()
+        .notEmpty()
+        .withMessage('Title is required'),
 
       body('reason')
         .isString()
@@ -178,6 +183,7 @@ class BudgetDTO {
     return [
       body('userId').optional().isUUID(),
       body('amount').optional().isDecimal({ decimal_digits: '0,2' }),
+      body('title').optional().isString().notEmpty(),
       body('reason').optional().isString().notEmpty(),
       
       // File validation - only if files are provided
@@ -212,7 +218,7 @@ class BudgetDTO {
         .isObject()
         .withMessage('Recipient must be a valid object')
         .custom((value) => {
-          if (!value) return true; // Skip if not provided
+          if (!value) return true;
           
           const allowedTypes = [
             'Bank Transfer',
@@ -315,6 +321,7 @@ class BudgetDTO {
     return [
       query('userId').optional().isUUID(),
       query('amount').optional().isDecimal({ decimal_digits: '0,2' }),
+      query('title').optional().isString(),
       query('reason').optional().isString(),
       query('secretaryApprovalStatus').optional().isIn(['pending', 'approved', 'declined']),
       query('chairpersonApprovalStatus').optional().isIn(['pending', 'approved', 'declined']),
@@ -326,8 +333,16 @@ class BudgetDTO {
         'Disbursed Pending Receipts',
         'Closed'
       ]),
+      query('page')
+        .optional()
+        .isInt({ min: 1 })
+        .withMessage('Page must be a positive integer'),
+      query('limit')
+        .optional()
+        .isInt({ min: 1, max: 100 })
+        .withMessage('Limit must be a positive integer between 1 and 100')
     ];
   }
 }
 
-module.exports = BudgetDTO;
+module.exports = BudgetDeserializer;

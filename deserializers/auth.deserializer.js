@@ -1,6 +1,6 @@
 const { body } = require('express-validator');
 
-class AuthDTO {
+class AuthDeserializer {
   static loginRules() {
     return [
       body('email')
@@ -28,4 +28,4 @@ class AuthDTO {
   }
 }
 
-module.exports = AuthDTO;
+module.exports = AuthDeserializer;

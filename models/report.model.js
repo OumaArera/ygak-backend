@@ -2,6 +2,7 @@ const { DataTypes } = require('sequelize');
 const sequelize = require('../config/sequelize');
 const User = require('./user.model');
 const Budget = require('./budget.model');
+const Task = require('./task.model');
 
 const Report = sequelize.define('Report', {
   id: {
@@ -26,6 +27,15 @@ const Report = sequelize.define('Report', {
       key: 'id',
     },
     field: 'budget_id',
+  },
+  taskId: {
+    type: DataTypes.UUID,
+    allowNull: true,
+    references: {
+      model: Task,
+      key: 'id',
+    },
+    field: 'task_id',
   },
   title: {
     type: DataTypes.TEXT,
