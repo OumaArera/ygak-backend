@@ -1,7 +1,7 @@
 const { body, query } = require('express-validator');
 const validateInternationalPhone = require('../utils/validatePhone');
 
-class UserDTO {
+class UserDeserializer {
   /**
    * Validation for creating a user
    */
@@ -193,4 +193,4 @@ class UserDTO {
   }
 }
 
-module.exports = UserDTO;
+module.exports = UserDeserializer;

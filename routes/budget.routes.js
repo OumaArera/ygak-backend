@@ -3,7 +3,7 @@ const router = express.Router();
 const { validationResult } = require('express-validator');
 
 const BudgetController = require('../controllers/budget.controller');
-const BudgetValidation = require('../dtos/budget.dto');
+const BudgetValidation = require('../deserializers/budget.deserializer');
 const { authenticateToken } = require('../middlewares/auth.middleware');
 const { authorizeRolesFromMapping } = require('../middlewares/roles.middleware');
 const upload = require('../middlewares/uploadFiles.memoryStorage.middleware');

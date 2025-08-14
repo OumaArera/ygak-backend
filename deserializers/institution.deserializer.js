@@ -1,6 +1,6 @@
 const { body } = require('express-validator');
 
-class InstitutionValidation {
+class InstitutionDeserializer {
   createRules() {
     return [
       body('name').notEmpty().withMessage('Name is required'),
@@ -41,4 +41,4 @@ class InstitutionValidation {
   }
 }
 
-module.exports = new InstitutionValidation();
+module.exports = new InstitutionDeserializer();

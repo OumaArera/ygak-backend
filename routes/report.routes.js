@@ -3,7 +3,7 @@ const router = express.Router();
 const { validationResult } = require('express-validator');
 
 const ReportController = require('../controllers/report.controller');
-const ReportValidation = require('../dtos/report.dto');
+const ReportValidation = require('../deserializers/report.deserializer');
 const { authenticateToken } = require('../middlewares/auth.middleware');
 const { authorizeRolesFromMapping } = require('../middlewares/roles.middleware');
 const fileUploadMiddleware = require('../middlewares/fileUpload.diskStorage.middleware');
