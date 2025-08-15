@@ -42,7 +42,7 @@ class AuthService {
     const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '1d' });
     await TokenService.invalidateAllUserTokens(user.id);
     await TokenService.saveToken(user.id, token, new Date(Date.now() + 8 * 60 * 60 * 1000));
-    console.log("Token After: ", token);
+    // console.log("Token After: ", token);
     const encryptedToken = TokenService.encrypt(token);
 
     return encryptedToken;

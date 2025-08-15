@@ -1,4 +1,3 @@
-// const User = require('../models/user.model');
 const Volunteer = require('../models/volunteer.model');
 const { Op } = require('sequelize');
 
