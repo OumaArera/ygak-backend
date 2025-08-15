@@ -2,25 +2,38 @@ const express = require('express');
 const router = express.Router();
 
 // Import individual route modules
-const userRoutes = require('./user.routes');
-const authRoutes = require('./auth.routes');
-const institutionRoutes = require('./institution.routes');
-const activityTrackerRoutes = require('./activityTracker.routes');
-const volunteerRoutes = require('./volunteer.routes');
-const budgetRoutes = require('./budget.routes');
-const reportRoutes = require('./report.routes');
-const taskRoutes = require('./task.routes');
-const meetingRoutes = require('./meeting.routes');
+const userRouter = require('./user.routes');
+const authRouter = require('./auth.routes');
+const institutionRouter = require('./institution.routes');
+const activityTrackerRouter = require('./activityTracker.routes');
+const volunteerRouter = require('./volunteer.routes');
+const budgetRouter = require('./budget.routes');
+const reportRouter = require('./report.routes');
+const taskRouter = require('./task.routes');
+const meetingRouter = require('./meeting.routes');
+const glRouter = require('./generalLedger.routes');
+const fundRequestRouter = require('./fundRequest.routes');
+const paymentRouter = require('./payment.routes');
+const reallocationRouter = require('./fundReallocation.routes');
+const reportsRouter = require('./financialReport.routes');
+const fundAllocationRouter = require('./fundAllocation.routes');
+
 
 // Mount routes
-router.use('/users', userRoutes);
-router.use('/auth', authRoutes);
-router.use('/institutions', institutionRoutes);
-router.use('/activity-tracks', activityTrackerRoutes);
-router.use('/volunteers', volunteerRoutes);
-router.use('/budgets', budgetRoutes);
-router.use('/reports', reportRoutes);
-router.use('/tasks', taskRoutes);
-router.use('/meetings', meetingRoutes);
+router.use('/users', userRouter);
+router.use('/auth', authRouter);
+router.use('/institutions', institutionRouter);
+router.use('/activity-tracks', activityTrackerRouter);
+router.use('/volunteers', volunteerRouter);
+router.use('/budgets', budgetRouter);
+router.use('/reports', reportRouter);
+router.use('/tasks', taskRouter);
+router.use('/meetings', meetingRouter);
+router.use('/general-ledgers', glRouter);
+router.use('/fund-requests', fundRequestRouter);
+router.use('/payments', paymentRouter);
+router.use('/reallocations', reallocationRouter);
+router.use('/financial-reports', reportsRouter);
+router.use('/fund-allocations', fundAllocationRouter);
 
 module.exports = router;
