@@ -14,6 +14,9 @@ const Payment = require('./payment.model');
 const FundRequest = require('./fundRequest.model');
 const FundReallocation = require('./fundReallocation.model');
 const FinancialTransaction = require('./financialTransaction.model');
+const Project = require('./project.model');
+const AssetRequest = require('./assetRequest.model');
+
 
 User.hasMany(Token, { foreignKey: 'userId', as: 'tokens' });
 Token.belongsTo(User, { foreignKey: 'userId', as: 'users' });
@@ -38,9 +41,6 @@ Report.belongsTo(Task, { foreignKey: 'taskId', as: 'task' });
 
 User.hasMany(Task, { foreignKey: 'assignedTo', as: 'tasks' });
 Task.belongsTo(User, { foreignKey: 'assignedTo', as: 'assignee' });
-
-// Budget relationships
-// GeneralLedger.hasMany(Budget, { foreignKey: 'glId', as: 'budgets' });
 
 // Fund Request relationships
 FundRequest.belongsTo(User, { foreignKey: 'requesterId', as: 'requester' });
@@ -88,6 +88,19 @@ Budget.hasMany(FinancialTransaction, { foreignKey: 'budgetId', as: 'transactions
 Payment.hasMany(FinancialTransaction, { foreignKey: 'paymentId', as: 'transactions' });
 FundAllocation.hasMany(FinancialTransaction, { foreignKey: 'allocationId', as: 'transactions' });
 
+Project.belongsTo(User, { foreignKey: 'maker', as: 'creator',});
+User.hasMany(Project, { foreignKey: 'maker', as: 'projects',});
+
+Project.belongsTo(Budget, { foreignKey: 'budgetId', as: 'budget',});
+Budget.hasMany(Project, { foreignKey: 'budgetId', as: 'projects',});
+
+AssetRequest.belongsTo(User, { foreignKey: 'requested_by', as: 'requester' });
+User.hasMany(AssetRequest, { foreignKey: 'requested_by', as: 'users' });
+
+AssetRequest.belongsTo(Budget, { foreignKey: 'budget_id', as: 'budget' });
+Budget.hasOne(AssetRequest, { foreignKey: 'budget_id', as: 'budget' });
+
+
 module.exports = {
   sequelize,
   User,
@@ -104,5 +117,7 @@ module.exports = {
   FundAllocation,
   FundReallocation,
   Payment,
-  FinancialTransaction
+  FinancialTransaction,
+  Project,
+  AssetRequest
 };

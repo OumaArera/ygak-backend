@@ -17,7 +17,8 @@ const paymentRouter = require('./payment.routes');
 const reallocationRouter = require('./fundReallocation.routes');
 const reportsRouter = require('./financialReport.routes');
 const fundAllocationRouter = require('./fundAllocation.routes');
-
+const projectRouter = require('./project.routes');
+const assetRequestRouter = require('./assetRequest.routes');
 
 // Mount routes
 router.use('/users', userRouter);
@@ -35,5 +36,7 @@ router.use('/payments', paymentRouter);
 router.use('/reallocations', reallocationRouter);
 router.use('/financial-reports', reportsRouter);
 router.use('/fund-allocations', fundAllocationRouter);
+router.use('/projects', projectRouter);
+router.use('/asset-requests', assetRequestRouter);
 
 module.exports = router;
