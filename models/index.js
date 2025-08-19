@@ -16,6 +16,7 @@ const FundReallocation = require('./fundReallocation.model');
 const FinancialTransaction = require('./financialTransaction.model');
 const Project = require('./project.model');
 const AssetRequest = require('./assetRequest.model');
+const Inventory = require('./inventory.model');
 
 
 User.hasMany(Token, { foreignKey: 'userId', as: 'tokens' });
@@ -92,13 +93,16 @@ Project.belongsTo(User, { foreignKey: 'maker', as: 'creator',});
 User.hasMany(Project, { foreignKey: 'maker', as: 'projects',});
 
 Project.belongsTo(Budget, { foreignKey: 'budgetId', as: 'budget',});
-Budget.hasMany(Project, { foreignKey: 'budgetId', as: 'projects',});
+Budget.hasOne(Project, { foreignKey: 'budgetId', as: 'projects',});
 
-AssetRequest.belongsTo(User, { foreignKey: 'requested_by', as: 'requester' });
-User.hasMany(AssetRequest, { foreignKey: 'requested_by', as: 'users' });
+AssetRequest.belongsTo(User, { foreignKey: 'requestedBy', as: 'requester' });
+User.hasMany(AssetRequest, { foreignKey: 'requestedBy', as: 'users' });
 
-AssetRequest.belongsTo(Budget, { foreignKey: 'budget_id', as: 'budget' });
-Budget.hasOne(AssetRequest, { foreignKey: 'budget_id', as: 'budget' });
+AssetRequest.belongsTo(Budget, { foreignKey: 'budgetId', as: 'budget' });
+Budget.hasOne(AssetRequest, { foreignKey: 'budgetId', as: 'budget' });
+
+Inventory.belongsTo(User, { foreignKey: 'currentUserId', as: 'currentUser' });
+User.hasMany(Inventory, {foreignKey: "currentUserId", as: "inventories"});
 
 
 module.exports = {
@@ -119,5 +123,6 @@ module.exports = {
   Payment,
   FinancialTransaction,
   Project,
-  AssetRequest
+  AssetRequest,
+  Inventory
 };
