@@ -1,22 +1,12 @@
 const newsletterRepository = require('../repositories/newsletter.repository');
-const activityTrackerService = require('./activityTracker.service');
 const { NotFoundError } = require('../utils/errors');
 
 class NewsletterService {
   async createNewsletter(newsletterData, creator) {
-    const newsletter = await newsletterRepository.create({
+    return await newsletterRepository.create({
       ...newsletterData,
       creatorId: creator.id
     });
-
-    await activityTrackerService.track({
-      userId: creator.id,
-      model: 'Newsletter',
-      action: 'CREATE',
-      description: `Created newsletter: ${newsletter.title}`
-    });
-
-    return newsletter;
   }
 
   async getAllNewsletters(query) {
@@ -32,18 +22,10 @@ class NewsletterService {
   }
 
   async updateNewsletter(id, updateData, user) {
-    const newsletter = await newsletterRepository.update(id, updateData);
+    const newsletter = await newsletterRepository.update(id, updateData, user);
     if (!newsletter) {
       throw new NotFoundError('Newsletter not found');
     }
-
-    await activityTrackerService.track({
-      userId: user.id,
-      model: 'Newsletter',
-      action: 'UPDATE',
-      description: `Updated newsletter: ${newsletter.title}`
-    });
-
     return newsletter;
   }
 
@@ -53,16 +35,7 @@ class NewsletterService {
       throw new NotFoundError('Newsletter not found');
     }
 
-    const deleted = await newsletterRepository.delete(id);
-    if (deleted) {
-      await activityTrackerService.track({
-        userId: user.id,
-        model: 'Newsletter',
-        action: 'DELETE',
-        description: `Deleted newsletter: ${newsletter.title}`
-      });
-    }
-    return deleted;
+    return await newsletterRepository.delete(id, user);
   }
 }
 

@@ -5,12 +5,12 @@ const newsletterValidationRules = require('../deserializers/newsletter.deseriali
 const { authenticate } = require('../middlewares/auth.middleware');
 const { checkRoles } = require('../middlewares/roles.middleware');
 const { validate } = require('../middlewares/validate.middleware');
-const { ROLES } = require('../utils/constants');
+const { roleGroups } = require('../utils/rolePermissions.js');
 
 router.post(
   '/',
   authenticate,
-  checkRoles([ROLES.ADMIN]),
+  checkRoles([roleGroups]),
   newsletterValidationRules.create,
   validate,
   newsletterController.create
@@ -31,7 +31,7 @@ router.get(
 router.put(
   '/:id',
   authenticate,
-  checkRoles([ROLES.ADMIN]),
+  checkRoles([roleGroups]),
   newsletterValidationRules.update,
   validate,
   newsletterController.update
@@ -40,7 +40,7 @@ router.put(
 router.delete(
   '/:id',
   authenticate,
-  checkRoles([ROLES.ADMIN]),
+  checkRoles([roleGroups]),
   newsletterController.delete
 );
 
