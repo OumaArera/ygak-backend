@@ -18,6 +18,7 @@ const reallocationRouter = require('./fundReallocation.routes');
 const reportsRouter = require('./financialReport.routes');
 const fundAllocationRouter = require('./fundAllocation.routes');
 const projectRouter = require('./project.routes');
+const newsletterRouter = require('./newsletter.routes');
 const assetRequestRouter = require('./assetRequest.routes');
 
 // Mount routes
@@ -38,5 +39,6 @@ router.use('/financial-reports', reportsRouter);
 router.use('/fund-allocations', fundAllocationRouter);
 router.use('/projects', projectRouter);
 router.use('/asset-requests', assetRequestRouter);
+router.use('/newsletters', newsletterRouter);
 
 module.exports = router;
