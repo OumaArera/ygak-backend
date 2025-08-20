@@ -1,5 +1,4 @@
 const inventoryRepository = require('../repositories/inventory.repository');
-// const { handleSequelizeError } = require('../utils/sequelizeErrorHandler.util');
 
 class InventoryService {
   /**

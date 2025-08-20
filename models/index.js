@@ -17,6 +17,7 @@ const FinancialTransaction = require('./financialTransaction.model');
 const Project = require('./project.model');
 const AssetRequest = require('./assetRequest.model');
 const Inventory = require('./inventory.model');
+const Event = require('./event.model');
 
 
 User.hasMany(Token, { foreignKey: 'userId', as: 'tokens' });
@@ -124,5 +125,6 @@ module.exports = {
   FinancialTransaction,
   Project,
   AssetRequest,
-  Inventory
+  Inventory,
+  Event
 };
