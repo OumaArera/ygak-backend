@@ -16,6 +16,7 @@ const FundReallocation = require('./fundReallocation.model');
 const FinancialTransaction = require('./financialTransaction.model');
 const Project = require('./project.model');
 const AssetRequest = require('./assetRequest.model');
+const Newsletter = require('./newsletter.model');
 
 
 User.hasMany(Token, { foreignKey: 'userId', as: 'tokens' });
@@ -119,5 +120,6 @@ module.exports = {
   Payment,
   FinancialTransaction,
   Project,
-  AssetRequest
+  AssetRequest,
+  Newsletter
 };
