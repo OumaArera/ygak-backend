@@ -1,20 +1,12 @@
 const express = require('express');
 const router = express.Router();
-const { validationResult } = require('express-validator');
-
 const UserController = require('../controllers/user.controller');
 const UserValidation = require('../deserializers/user.deserializer');
 const { authenticateToken } = require('../middlewares/auth.middleware');
 const { authorizeRolesFromMapping } = require('../middlewares/roles.middleware');
 const { conditionalSuperuserAccess } = require('../middlewares/conditionalSuperuser.middleware');
+const validate = require('../middlewares/validate.middleware');
 
-const validate = (req, res, next) => {
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    return res.status(400).json({ errors: errors.array() });
-  }
-  next();
-};
 
 router.post(
   '/',
