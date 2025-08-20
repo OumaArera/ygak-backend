@@ -48,7 +48,8 @@ const budgetUploadMiddleware = createUploadMiddleware({
   maxFileSizeMB: 10,
   fields: [
     { name: 'invoice', maxCount: 1 },
-    { name: 'receipt', maxCount: 1 }
+    { name: 'receipt', maxCount: 1 },
+    { name: 'flyer', maxCount: 1 },
   ]
 });
 

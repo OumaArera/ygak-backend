@@ -1,4 +1,5 @@
 const UserService = require('../services/user.service');
+const { handleAllErrors } = require('../utils/sequelizeErrorHandler.util');
 
 class UserController {
   /**
@@ -9,6 +10,15 @@ class UserController {
       const newUser = await UserService.createUser(req.body, req.user);
       res.status(201).json({success: true, data:newUser});
     } catch (err) {
+
+      console.error('Error in UserController.createUser:', err);
+      
+      const sequelizeErrors = ['SequelizeUniqueConstraintError', 'SequelizeForeignKeyConstraintError', 'SequelizeValidationError'];
+      if (sequelizeErrors.includes(err.name)) {
+        const errors = handleAllErrors(err);
+        return res.status(400).json({ success: false, errors });
+      }
+
       res.status(500).json({success: false, error:err.message});
     }
   }
@@ -48,6 +58,13 @@ class UserController {
       const updatedUser = await UserService.updateUser(req.params.id, req.body, req.user);
       res.status(200).json({success: true, data: updatedUser});
     } catch (err) {
+      console.error('Error in UserController.updateUser:', err);
+
+      const sequelizeErrors = ['SequelizeUniqueConstraintError', 'SequelizeForeignKeyConstraintError', 'SequelizeValidationError'];
+      if (sequelizeErrors.includes(err.name)) {
+        const errors = handleAllErrors(err);
+        return res.status(400).json({ success: false, errors });
+      }
       res.status(500).json({success: false, error: err.message});
     }
   }

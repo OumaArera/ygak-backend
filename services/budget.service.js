@@ -5,7 +5,6 @@ class BudgetService {
   async createBudget(data, userContext) {
     try {
       const address = 'assets/accounts';
-      // Handle files asynchronously if provided
       if (data.invoice && data.invoice.buffer) {
         data.invoice = await saveFile(
           data.invoice.buffer,
@@ -53,7 +52,6 @@ class BudgetService {
   async updateBudget(id, updates, userContext) {
     try {
       const address = 'assets/accounts';
-      // Handle files asynchronously if provided
       if (updates.invoice && updates.invoice.buffer) {
         updates.invoice = await saveFile(
           updates.invoice.buffer,

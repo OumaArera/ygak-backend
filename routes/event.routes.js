@@ -1,50 +1,50 @@
 const express = require('express');
 const router = express.Router();
-const TaskController = require('../controllers/task.controller');
-const TaskValidation = require('../deserializers/task.deserializer');
+const EventController = require('../controllers/event.controller');
+const EventValidation = require('../deserializers/event.deserializer');
 const { authenticateToken } = require('../middlewares/auth.middleware');
 const { authorizeRolesFromMapping } = require('../middlewares/roles.middleware');
+const upload = require('../middlewares/uploadFiles.memoryStorage.middleware');
 const validate = require('../middlewares/validate.middleware');
 
-
-// Routes
 router.post(
   '/',
   authenticateToken,
-  TaskValidation.createRules(),
+  upload,
+  EventValidation.createRules(),
   validate,
   authorizeRolesFromMapping('BoardSecretaryAccess'),
-  TaskController.create
+  EventController.create
 );
 
 router.get(
   '/',
-  authenticateToken,
-  authorizeRolesFromMapping('AllUsers'),
-  TaskController.search
+  EventValidation.queryRules(),
+  validate,
+  EventController.search
 );
 
 router.get(
   '/:id',
   authenticateToken,
-  authorizeRolesFromMapping('AllUsers'),
-  TaskController.getById
+  EventController.getById
 );
 
 router.put(
   '/:id',
   authenticateToken,
-  TaskValidation.updateRules(),
+  upload,
+  EventValidation.updateRules(),
   validate,
   authorizeRolesFromMapping('BoardSecretaryAccess'),
-  TaskController.update
+  EventController.update
 );
 
 router.delete(
   '/:id',
   authenticateToken,
   authorizeRolesFromMapping('ITSuperuserAccess'),
-  TaskController.delete
+  EventController.delete
 );
 
 module.exports = router;
