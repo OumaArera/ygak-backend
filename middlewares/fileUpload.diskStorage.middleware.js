@@ -10,7 +10,7 @@ const ensureDirExists = (dir) => {
 
 function createDiskUploadMiddleware(options = {}) {
   const {
-    destination = 'uploads',
+    destination = 'assets/repo',
     allowedMimeTypes = [],
     maxFileSizeMB = 200,
     fields = []

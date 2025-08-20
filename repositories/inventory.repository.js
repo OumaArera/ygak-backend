@@ -1,24 +1,23 @@
-const { AssetRequest, User, Budget } = require('../models');
+const { Inventory, User } = require('../models');
 const activityTrackerService = require('../services/activityTracker.service');
 const { Op } = require('sequelize');
 const paginationUtil = require('../utils/pagination');
 
-class AssetRequestRepository {
+class InventoryRepository {
   /**
-   * Creates a new asset request.
-   * @param {object} data - The data for the new asset request.
+   * Creates a new inventory item.
+   * @param {object} data - The data for the new inventory item.
    * @param {object} userContext - The user's context for activity logging.
-   * @returns {Promise<AssetRequest>} The newly created asset request.
+   * @returns {Promise<Inventory>} The newly created inventory item.
    */
   async create(data, userContext) {
-    data.requestedBy = userContext.id
-    const result = await AssetRequest.create(data);
+    const result = await Inventory.create(data);
 
     await activityTrackerService.logActivity({
       userId: userContext.id,
-      model: "AssetRequest",
+      model: "Inventory",
       action: 'CREATE',
-      description: `Created a new asset request with data: ${JSON.stringify(data)}`,
+      description: `Created a new inventory item with data: ${JSON.stringify(data)}`,
       ipAddress: userContext.ip,
       userAgent: userContext.userAgent
     });
@@ -27,22 +26,18 @@ class AssetRequestRepository {
   }
 
   /**
-   * Finds an asset request by its primary key.
-   * @param {string} id - The UUID of the asset request.
+   * Finds an inventory item by its primary key.
+   * @param {string} id - The UUID of the inventory item.
    * @param {object} userContext - The user's context for activity logging.
-   * @returns {Promise<AssetRequest|null>} The asset request, or null if not found.
+   * @returns {Promise<Inventory|null>} The inventory item, or null if not found.
    */
   async findById(id, userContext) {
-    const result = await AssetRequest.findByPk(id, {
-      attributes: { exclude: ['budgetId', 'requestedBy'] },
+    const result = await Inventory.findByPk(id, {
+      attributes: { exclude: ['currentUserId'] },
       include: [
         {
-          model: Budget,
-          as: 'budget'
-        },
-        {
           model: User,
-          as: 'requester',
+          as: 'currentUser',
           attributes: { exclude: ['password'] }
         }
       ]
@@ -50,9 +45,9 @@ class AssetRequestRepository {
 
     await activityTrackerService.logActivity({
       userId: userContext.id,
-      model: "AssetRequest",
+      model: "Inventory",
       action: 'GET',
-      description: `Fetched asset request with ID: ${id}`,
+      description: `Fetched inventory item with ID: ${id}`,
       ipAddress: userContext.ip,
       userAgent: userContext.userAgent
     });
@@ -61,10 +56,10 @@ class AssetRequestRepository {
   }
 
   /**
-   * Finds asset requests based on a query.
+   * Finds inventory items based on a query.
    * @param {object} query - The query parameters for filtering and pagination.
    * @param {object} userContext - The user's context for activity logging.
-   * @returns {Promise<{rows: AssetRequest[], count: number}>} Paginated list of asset requests.
+   * @returns {Promise<{rows: Inventory[], count: number}>} Paginated list of inventory items.
    */
   async findByQuery(query, userContext) {
     const { page, limit, ...filters } = query;
@@ -78,17 +73,13 @@ class AssetRequestRepository {
       }
     }
 
-    const result = await paginationUtil.paginate(AssetRequest, {
+    const result = await paginationUtil.paginate(Inventory, {
       where,
-      attributes: { exclude: ['budgetId', 'requestedBy'] },
+      attributes: { exclude: ['currentUserId'] },
       include: [
         {
-          model: Budget,
-          as: 'budget'
-        },
-        {
           model: User,
-          as: 'requester',
+          as: 'currentUser',
           attributes: { exclude: ['password'] }
         }
       ],
@@ -98,9 +89,9 @@ class AssetRequestRepository {
 
     await activityTrackerService.logActivity({
       userId: userContext.id,
-      model: "AssetRequest",
+      model: "Inventory",
       action: 'GET',
-      description: `Queried asset requests with params: ${JSON.stringify(query)}`,
+      description: `Queried inventory items with params: ${JSON.stringify(query)}`,
       ipAddress: userContext.ip,
       userAgent: userContext.userAgent
     });
@@ -109,23 +100,23 @@ class AssetRequestRepository {
   }
 
   /**
-   * Updates an existing asset request.
-   * @param {string} id - The UUID of the asset request to update.
+   * Updates an existing inventory item.
+   * @param {string} id - The UUID of the inventory item to update.
    * @param {object} updates - The fields to update.
    * @param {object} userContext - The user's context for activity logging.
-   * @returns {Promise<AssetRequest|null>} The updated asset request, or null if not found.
+   * @returns {Promise<Inventory|null>} The updated inventory item, or null if not found.
    */
   async updateById(id, updates, userContext) {
-    const assetRequest = await AssetRequest.findByPk(id);
-    if (!assetRequest) return null;
+    const inventory = await Inventory.findByPk(id);
+    if (!inventory) return null;
 
-    const result = await assetRequest.update(updates);
+    const result = await inventory.update(updates);
 
     await activityTrackerService.logActivity({
       userId: userContext.id,
-      model: "AssetRequest",
+      model: "Inventory",
       action: 'UPDATE',
-      description: `Updated asset request with ID: ${id}, Payload: ${JSON.stringify(updates)}`,
+      description: `Updated inventory item with ID: ${id}, Payload: ${JSON.stringify(updates)}`,
       ipAddress: userContext.ip,
       userAgent: userContext.userAgent
     });
@@ -134,28 +125,28 @@ class AssetRequestRepository {
   }
 
   /**
-   * Deletes an asset request.
-   * @param {string} id - The UUID of the asset request to delete.
+   * Deletes an inventory item.
+   * @param {string} id - The UUID of the inventory item to delete.
    * @param {object} userContext - The user's context for activity logging.
-   * @returns {Promise<AssetRequest|null>} The deleted asset request, or null if not found.
+   * @returns {Promise<Inventory|null>} The deleted inventory item, or null if not found.
    */
   async deleteById(id, userContext) {
-    const assetRequest = await AssetRequest.findByPk(id);
-    if (!assetRequest) return null;
+    const inventory = await Inventory.findByPk(id);
+    if (!inventory) return null;
 
-    await assetRequest.destroy();
+    await inventory.destroy();
 
     await activityTrackerService.logActivity({
       userId: userContext.id,
-      model: "AssetRequest",
+      model: "Inventory",
       action: 'DELETE',
-      description: `Deleted asset request with ID: ${id}`,
+      description: `Deleted inventory item with ID: ${id}`,
       ipAddress: userContext.ip,
       userAgent: userContext.userAgent
     });
 
-    return assetRequest;
+    return inventory;
   }
 }
 
-module.exports = new AssetRequestRepository();
+module.exports = new InventoryRepository();
