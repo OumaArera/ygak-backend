@@ -18,6 +18,7 @@ const Project = require('./project.model');
 const AssetRequest = require('./assetRequest.model');
 const Inventory = require('./inventory.model');
 const Event = require('./event.model');
+const EventMedia = require('./eventMedia.model');
 
 
 User.hasMany(Token, { foreignKey: 'userId', as: 'tokens' });
@@ -105,6 +106,9 @@ Budget.hasOne(AssetRequest, { foreignKey: 'budgetId', as: 'budget' });
 Inventory.belongsTo(User, { foreignKey: 'currentUserId', as: 'currentUser' });
 User.hasMany(Inventory, {foreignKey: "currentUserId", as: "inventories"});
 
+Event.hasOne(EventMedia, { foreignKey: 'eventId', as: 'media' });
+EventMedia.belongsTo(Event, { foreignKey: 'eventId', as: 'event' });
+
 
 module.exports = {
   sequelize,
@@ -126,5 +130,6 @@ module.exports = {
   Project,
   AssetRequest,
   Inventory,
-  Event
+  Event,
+  EventMedia
 };
