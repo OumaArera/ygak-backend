@@ -25,7 +25,7 @@ const Newsletter = sequelize.define(
         model: User,
         key: 'id'
       },
-      onDelete: 'SET NULL'
+      onDelete: 'SETNULL'
     }
   },
   {
