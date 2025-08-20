@@ -50,6 +50,7 @@ const budgetUploadMiddleware = createUploadMiddleware({
     { name: 'invoice', maxCount: 1 },
     { name: 'receipt', maxCount: 1 },
     { name: 'flyer', maxCount: 1 },
+    { name: 'images', maxCount: 20 }
   ]
 });
 
