@@ -22,6 +22,7 @@ const assetRequestRouter = require('./assetRequest.routes');
 const inventoryRouter = require('./inventory.routes');
 const eventRouter = require('./event.routes');
 const eventMediaRouter = require('./eventMedia.routes');
+const donationRouter = require('./donation.routes');
 
 // Mount routes
 router.use('/users', userRouter);
@@ -44,5 +45,6 @@ router.use('/asset-requests', assetRequestRouter);
 router.use('/inventories', inventoryRouter);
 router.use('/upcoming-events', eventRouter);
 router.use('/events-media', eventMediaRouter);
+router.use('/donations', donationRouter);
 
 module.exports = router;

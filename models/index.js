@@ -19,6 +19,7 @@ const AssetRequest = require('./assetRequest.model');
 const Inventory = require('./inventory.model');
 const Event = require('./event.model');
 const EventMedia = require('./eventMedia.model');
+const Donation = require('./donation.model');
 
 
 User.hasMany(Token, { foreignKey: 'userId', as: 'tokens' });
@@ -131,5 +132,6 @@ module.exports = {
   AssetRequest,
   Inventory,
   Event,
-  EventMedia
+  EventMedia,
+  Donation
 };
