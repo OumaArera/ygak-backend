@@ -3,7 +3,7 @@ const fs = require('fs');
 const path = require('path');
 require('dotenv').config();
 
-const sslCa = process.env.CA_CERT;
+const sslCa = fs.readFileSync(path.resolve(__dirname, 'prod-ca-2021.crt')).toString();
 
 const pool = new Pool({
   user: process.env.DB_USER,
@@ -15,6 +15,7 @@ const pool = new Pool({
     rejectUnauthorized: true,
     ca: sslCa,
   },
+  family: 4,
 });
 
 pool.on('connect', () => {

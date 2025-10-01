@@ -1,6 +1,7 @@
 const { User } = require('../models');
 const activityTrackerService = require('../services/activityTracker.service');
 const { Op } = require('sequelize');
+const paginationUtil = require('../utils/pagination');
 
 
 class UserRepository {
@@ -49,6 +50,7 @@ class UserRepository {
    * @returns {Promise<User[]>}
    */
   async findByQuery(params = {}, userContext) {
+    const { page, limit, ...filters } = params;
     const whereClause = {};
 
     for (const [key, value] of Object.entries(params)) {
@@ -62,15 +64,22 @@ class UserRepository {
       }
     }
 
-    const result = await User.findAll({ where: whereClause });
-    await activityTrackerService.logActivity({
-      userId: userContext.id,
-      model: "User",
-      action: 'GET',
-      description: `Get users ${JSON.stringify(result)}`,
-      ipAddress: userContext.ip,
-      userAgent: userContext.userAgent
+    const result = await paginationUtil.paginate(User, {
+      where: whereClause,
+      attributes: { exclude: ['password'] },
+      page,
+      limit
     });
+
+    // const result = await User.findAll({ where: whereClause });
+    // await activityTrackerService.logActivity({
+    //   userId: userContext.id,
+    //   model: "User",
+    //   action: 'GET',
+    //   description: `Get users ${JSON.stringify(result)}`,
+    //   ipAddress: userContext.ip,
+    //   userAgent: userContext.userAgent
+    // });
     return result;
   }
 
@@ -92,6 +101,7 @@ class UserRepository {
     });
     return result;
   }
+
 
   /**
    * Delete user by ID

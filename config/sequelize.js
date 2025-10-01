@@ -3,7 +3,7 @@ const fs = require('fs');
 const path = require('path');
 require('dotenv').config();
 
-const sslCa = process.env.CA_CERT;
+const sslCa = fs.readFileSync(path.resolve(__dirname, 'prod-ca-2021.crt')).toString();
 
 const sequelize = new Sequelize(
   process.env.DB_NAME,
@@ -20,6 +20,7 @@ const sequelize = new Sequelize(
         rejectUnauthorized: true,
         ca: sslCa,
       },
+      family: 4,
     },
   }
 );

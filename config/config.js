@@ -1,8 +1,9 @@
+require('dotenv').config();
 const fs = require('fs');
 const path = require('path');
-require('dotenv').config();
 
-const sslCa = process.env.CA_CERT;
+// Load certificate file
+const sslCa = fs.readFileSync(path.resolve(__dirname, 'prod-ca-2021.crt')).toString();
 
 module.exports = {
   development: {
@@ -11,19 +12,32 @@ module.exports = {
     database: process.env.DB_NAME,
     host: process.env.DB_HOST,
     port: Number(process.env.DB_PORT),
-    dialect: 'postgres',
+    dialect: "postgres",
     dialectOptions: {
       ssl: {
         require: true,
         rejectUnauthorized: true,
         ca: sslCa,
+        // servername: process.env.DB_HOST,  <-- optional, usually inferred automatically
       },
+      family: 4,
     },
   },
-  test: {
-    // Add test DB config if needed
-  },
   production: {
-    // Add production DB config if needed
+    username: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_NAME,
+    host: process.env.DB_HOST,
+    port: Number(process.env.DB_PORT),
+    dialect: "postgres",
+    dialectOptions: {
+      ssl: {
+        require: true,
+        rejectUnauthorized: true,
+        ca: sslCa,
+        // servername: process.env.DB_HOST,
+      },
+      family: 4,
+    },
   },
 };
