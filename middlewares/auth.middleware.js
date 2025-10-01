@@ -12,6 +12,7 @@ async function authenticateToken(req, res, next) {
 
   jwt.verify(decryptedToken, process.env.JWT_SECRET, (err, user) => {
     if (err) return res.status(403).json({ error: 'Invalid token' });
+    console.log("User")
     req.user = user;
     next();
   });

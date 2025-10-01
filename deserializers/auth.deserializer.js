@@ -16,6 +16,10 @@ class AuthDeserializer {
 
   static changePasswordRules() {
     return [
+      body('email')
+        .isEmail()
+        .withMessage('Valid email is required'),
+        
       body('oldPassword')
         .isString()
         .notEmpty()

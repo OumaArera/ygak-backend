@@ -93,8 +93,9 @@ class AuthService {
   /**
    * Change user password
    */
-  async changePassword(id, oldPassword, newPassword, userContext) {
-    const user = await userRepository.findById(id, userContext);
+  async changePassword(email, oldPassword, newPassword, userContext) {
+    // const user = await userRepository.findById(id, userContext);
+    const user = authRepository.findUserForLogin(email, userContext);
     if (!user) {
       throw new Error('User not found');
     }
@@ -107,9 +108,10 @@ class AuthService {
 
     // Hash new password
     // const hashedPassword = await User.hashPassword(newPassword);
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
 
     // Update password in database
-    await userRepository.updateById(id, { password: newPassword });
+    await userRepository.updateById(user.id, { password: hashedPassword }, userContext);
 
     return { message: 'Password updated successfully' };
   }
