@@ -24,6 +24,7 @@ const UpcomingProject = require('./upcomingProject.model');
 const ResourceLibrary = require('./resourceLibrary.model');
 const Blog = require('./blog.model');
 const Newsletter = require('./newsletter.model');
+const EventRegister = require('./eventRegister.model');
 
 
 User.hasMany(Token, { foreignKey: 'userId', as: 'tokens' });
@@ -114,6 +115,10 @@ User.hasMany(Inventory, {foreignKey: "currentUserId", as: "inventories"});
 Event.hasOne(EventMedia, { foreignKey: 'eventId', as: 'media' });
 EventMedia.belongsTo(Event, { foreignKey: 'eventId', as: 'event' });
 
+Event.hasMany(EventRegister, { foreignKey: 'eventId', as: 'registrations' });
+EventRegister.belongsTo(Event, { foreignKey: 'eventId', as: 'event' });
+
+
 
 module.exports = {
   sequelize,
@@ -137,6 +142,7 @@ module.exports = {
   Inventory,
   Event,
   EventMedia,
+  EventRegister,
   Donation,
   UpcomingProject,
   ResourceLibrary,

@@ -27,6 +27,8 @@ const upcomingProjectsRouter = require('./upcomingProject.routes');
 const resouceLibraryRouter = require('./resourceLibrary.routes');
 const blogRouter = require('./blog.routes');
 const newsletterRouter = require('./newsletter.routes');
+const eventRegisterRouter = require('./eventRegister.routes');
+
 
 // Mount routes
 router.use('/users', userRouter);
@@ -54,5 +56,6 @@ router.use('/upcoming-projects', upcomingProjectsRouter);
 router.use('/resource-library', resouceLibraryRouter);
 router.use('/blogs', blogRouter);
 router.use('/newsletter', newsletterRouter);
+router.use('/events/register', eventRegisterRouter);
 
 module.exports = router;
