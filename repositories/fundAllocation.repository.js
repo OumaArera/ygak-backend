@@ -18,19 +18,10 @@ class FundAllocationRepository {
       remainingAmount: data.allocatedAmount
     });
 
-    await activityTrackerService.logActivity({
-      userId: userContext.id,
-      model: "FundAllocation",
-      action: 'CREATE',
-      description: `Allocated ${data.allocatedAmount} to budget ${data.budgetId}`,
-      ipAddress: userContext.ip,
-      userAgent: userContext.userAgent
-    });
-
     return result;
   }
 
-  async findById(id, userContext) {
+  async findById(id) {
     const result = await FundAllocation.findByPk(id, {
       include: [
         { model: FundRequest, as: 'fundRequest' },
@@ -41,19 +32,10 @@ class FundAllocationRepository {
       ]
     });
 
-    await activityTrackerService.logActivity({
-      userId: userContext.id,
-      model: "FundAllocation",
-      action: 'GET',
-      description: `Fetched fund allocation with ID: ${id}`,
-      ipAddress: userContext.ip,
-      userAgent: userContext.userAgent
-    });
-
     return result;
   }
 
-  async findByQuery(query, userContext) {
+  async findByQuery(query) {
     const { page, limit, ...filters } = query;
     const where = {};
 
@@ -67,15 +49,6 @@ class FundAllocationRepository {
       }
     }
 
-
-    // for (const [key, value] of Object.entries(filters)) {
-    //   if (typeof value === 'string') {
-    //     where[key] = { [Op.iLike]: `%${value}%` };
-    //   } else {
-    //     where[key] = value;
-    //   }
-    // }
-
     const result = await paginationUtil.paginate(FundAllocation, {
       where,
       include: [
@@ -87,50 +60,24 @@ class FundAllocationRepository {
       limit
     });
 
-    await activityTrackerService.logActivity({
-      userId: userContext.id,
-      model: "FundAllocation",
-      action: 'GET',
-      description: `Queried fund allocations with params: ${JSON.stringify(query)}`,
-      ipAddress: userContext.ip,
-      userAgent: userContext.userAgent
-    });
 
     return result;
   }
 
-  async updateById(id, updates, userContext) {
+  async updateById(id, updates) {
     const allocation = await FundAllocation.findByPk(id);
     if (!allocation) return null;
 
     const result = await allocation.update(updates);
 
-    await activityTrackerService.logActivity({
-      userId: userContext.id,
-      model: "FundAllocation",
-      action: 'UPDATE',
-      description: `Updated fund allocation ${id}: ${JSON.stringify(updates)}`,
-      ipAddress: userContext.ip,
-      userAgent: userContext.userAgent
-    });
-
     return result;
   }
 
-  async deleteById(id, userContext) {
+  async deleteById(id) {
     const allocation = await FundAllocation.findByPk(id);
     if (!allocation) return null;
 
     await allocation.destroy();
-
-    await activityTrackerService.logActivity({
-      userId: userContext.id,
-      model: "FundAllocation",
-      action: 'DELETE',
-      description: `Deleted fund allocation with ID: ${id}`,
-      ipAddress: userContext.ip,
-      userAgent: userContext.userAgent
-    });
 
     return allocation;
   }

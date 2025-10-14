@@ -1,25 +1,15 @@
 const { Task, User } = require('../models');
-const activityTrackerService = require('../services/activityTracker.service');
 const { Op } = require('sequelize');
 const paginationUtil = require('../utils/pagination');
 
 class TaskRepository {
-  async create(data, userContext) {
+  async create(data) {
     const result = await Task.create(data);
-
-    await activityTrackerService.logActivity({
-      userId: userContext.id,
-      model: "Task",
-      action: 'CREATE',
-      description: `Created a new task with data: ${JSON.stringify(data)}`,
-      ipAddress: userContext.ip,
-      userAgent: userContext.userAgent
-    });
 
     return result;
   }
 
-  async findById(id, userContext) {
+  async findById(id) {
     const result = await Task.findByPk(id, {
       attributes: { exclude: ['assignedTo'] },
       include: [
@@ -31,19 +21,10 @@ class TaskRepository {
       ]
     });
 
-    await activityTrackerService.logActivity({
-      userId: userContext.id,
-      model: "Task",
-      action: 'GET',
-      description: `Fetched task with ID: ${id}`,
-      ipAddress: userContext.ip,
-      userAgent: userContext.userAgent
-    });
-
     return result;
   }
 
-  async findByQuery(query, userContext) {
+  async findByQuery(query) {
     const { page, limit, ...filters } = query;
     const where = {};
 
@@ -69,50 +50,23 @@ class TaskRepository {
       limit
     });
 
-    await activityTrackerService.logActivity({
-      userId: userContext.id,
-      model: "Task",
-      action: 'GET',
-      description: `Queried tasks with params: ${JSON.stringify(query)}`,
-      ipAddress: userContext.ip,
-      userAgent: userContext.userAgent
-    });
-
     return result;
   }
 
-  async updateById(id, updates, userContext) {
+  async updateById(id, updates) {
     const task = await Task.findByPk(id);
     if (!task) return null;
 
     const result = await task.update(updates);
 
-    await activityTrackerService.logActivity({
-      userId: userContext.id,
-      model: "Task",
-      action: 'UPDATE',
-      description: `Updated task with ID: ${id}, Payload: ${JSON.stringify(updates)}`,
-      ipAddress: userContext.ip,
-      userAgent: userContext.userAgent
-    });
-
     return result;
   }
 
-  async deleteById(id, userContext) {
+  async deleteById(id) {
     const task = await Task.findByPk(id);
     if (!task) return null;
 
     await task.destroy();
-
-    await activityTrackerService.logActivity({
-      userId: userContext.id,
-      model: "Task",
-      action: 'DELETE',
-      description: `Deleted task with ID: ${id}`,
-      ipAddress: userContext.ip,
-      userAgent: userContext.userAgent
-    });
 
     return task;
   }

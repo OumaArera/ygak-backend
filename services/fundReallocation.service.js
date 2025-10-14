@@ -9,7 +9,7 @@ class FundReallocationService {
     const transaction = await sequelize.transaction();
     
     try {
-      const fromAllocation = await FundAllocationRepository.findById(data.fromAllocationId, userContext);
+      const fromAllocation = await FundAllocationRepository.findById(data.fromAllocationId);
       if (!fromAllocation) {
         throw new Error('Source allocation not found');
       }
@@ -39,7 +39,7 @@ class FundReallocationService {
     const transaction = await sequelize.transaction();
     
     try {
-      const reallocation = await FundReallocationRepository.findById(id, userContext);
+      const reallocation = await FundReallocationRepository.findById(id);
       if (!reallocation) {
         throw new Error('Reallocation not found');
       }
@@ -61,7 +61,7 @@ class FundReallocationService {
         updates.status = 'Completed';
       }
 
-      const result = await FundReallocationRepository.updateById(id, updates, userContext);
+      const result = await FundReallocationRepository.updateById(id, updates);
       
       await transaction.commit();
       return result;
@@ -74,7 +74,7 @@ class FundReallocationService {
 
   async processReallocation(reallocation, userContext, transaction) {
     // Reduce source allocation
-    const fromAllocation = await FundAllocationRepository.findById(reallocation.fromAllocationId, userContext);
+    const fromAllocation = await FundAllocationRepository.findById(reallocation.fromAllocationId);
     const newRemainingAmount = parseFloat(fromAllocation.remainingAmount) - parseFloat(reallocation.reallocationAmount);
     
     await FundAllocationRepository.updateById(
@@ -83,7 +83,6 @@ class FundReallocationService {
         remainingAmount: newRemainingAmount,
         status: newRemainingAmount <= 0 ? 'reallocated' : 'active'
       },
-      userContext
     );
 
     // Create new allocation for target budget
@@ -124,7 +123,7 @@ class FundReallocationService {
 
   async searchReallocations(queryParams, userContext) {
     try {
-      return await FundReallocationRepository.findByQuery(queryParams, userContext);
+      return await FundReallocationRepository.findByQuery(queryParams);
     } catch (error) {
       console.error('Error in searchReallocations service:', error);
       throw new Error(`Failed to search reallocations: ${error.message}`);

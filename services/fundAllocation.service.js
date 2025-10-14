@@ -47,7 +47,7 @@ class FundAllocationService {
       await FundRequestRepository.updateById(
         data.fundRequestId, 
         { status: 'Allocated' }, 
-        userContext
+        
       );
 
       await transaction.commit();
@@ -64,7 +64,7 @@ class FundAllocationService {
 
   async getFundAllocationById(id, userContext) {
     try {
-      return await FundAllocationRepository.findById(id, userContext);
+      return await FundAllocationRepository.findById(id);
     } catch (error) {
       console.error('Error in getFundAllocationById service:', error);
       throw new Error(`Failed to get fund allocation: ${error.message}`);
@@ -73,7 +73,7 @@ class FundAllocationService {
 
   async searchFundAllocations(queryParams, userContext) {
     try {
-      return await FundAllocationRepository.findByQuery(queryParams, userContext);
+      return await FundAllocationRepository.findByQuery(queryParams);
     } catch (error) {
       console.error('Error in searchFundAllocations service:', error);
       throw new Error(`Failed to search fund allocations: ${error.message}`);
@@ -84,7 +84,7 @@ class FundAllocationService {
     const transaction = await sequelize.transaction();
     
     try {
-      const fundAllocation = await FundAllocationRepository.findById(id, userContext);
+      const fundAllocation = await FundAllocationRepository.findById(id);
       if (!fundAllocation) {
         throw new Error('Fund allocation not found');
       }
@@ -101,7 +101,7 @@ class FundAllocationService {
         updates.remainingAmount = parseFloat(updates.allocatedAmount) - usedAmount;
       }
 
-      const result = await FundAllocationRepository.updateById(id, updates, userContext);
+      const result = await FundAllocationRepository.updateById(id, updates);
       
       await transaction.commit();
       return result;
@@ -116,7 +116,7 @@ class FundAllocationService {
     const transaction = await sequelize.transaction();
     
     try {
-      const fundAllocation = await FundAllocationRepository.findById(id, userContext);
+      const fundAllocation = await FundAllocationRepository.findById(id);
       if (!fundAllocation) {
         throw new Error('Fund allocation not found');
       }
@@ -134,8 +134,7 @@ class FundAllocationService {
       // Mark current allocation as reallocated
       await FundAllocationRepository.updateById(
         id, 
-        { status: 'reallocated' }, 
-        userContext
+        { status: 'reallocated' }
       );
 
       // Create new allocation
@@ -174,7 +173,7 @@ class FundAllocationService {
     };
 
     // Calculate running balance
-    const gl = await GeneralLedgerRepository.findById(allocation.glId, userContext);
+    const gl = await GeneralLedgerRepository.findById(allocation.glId);
     transactionData.runningBalance = parseFloat(gl.currentBalance) + parseFloat(allocation.allocatedAmount);
 
     await FinancialTransactionRepository.create(transactionData, userContext);
@@ -182,8 +181,7 @@ class FundAllocationService {
     // Update GL balance
     await GeneralLedgerRepository.updateById(
       allocation.glId,
-      { currentBalance: transactionData.runningBalance },
-      userContext
+      { currentBalance: transactionData.runningBalance }
     );
   }
 
@@ -191,7 +189,7 @@ class FundAllocationService {
     const transaction = await sequelize.transaction();
     
     try {
-      const fundAllocation = await FundAllocationRepository.findById(id, userContext);
+      const fundAllocation = await FundAllocationRepository.findById(id);
       if (!fundAllocation) {
         throw new Error('Fund allocation not found');
       }
@@ -214,7 +212,7 @@ class FundAllocationService {
       };
 
       // Calculate new running balance
-      const gl = await GeneralLedgerRepository.findById(fundAllocation.glId, userContext);
+      const gl = await GeneralLedgerRepository.findById(fundAllocation.glId);
       transactionData.runningBalance = parseFloat(gl.currentBalance) - parseFloat(fundAllocation.allocatedAmount);
 
       await FinancialTransactionRepository.create(transactionData, userContext);
@@ -223,18 +221,16 @@ class FundAllocationService {
       await GeneralLedgerRepository.updateById(
         fundAllocation.glId,
         { currentBalance: transactionData.runningBalance },
-        userContext
       );
 
       // Update fund request status back to approved
       await FundRequestRepository.updateById(
         fundAllocation.fundRequestId,
         { status: 'Approved' },
-        userContext
       );
 
       // Delete the allocation
-      const result = await FundAllocationRepository.deleteById(id, userContext);
+      const result = await FundAllocationRepository.deleteById(id);
 
       await transaction.commit();
       return result;
@@ -247,7 +243,7 @@ class FundAllocationService {
 
   async getFundAllocationSummary(userContext) {
     try {
-      const allocations = await FundAllocationRepository.findByQuery({}, userContext);
+      const allocations = await FundAllocationRepository.findByQuery({});
       
       const summary = {
         totalAllocations: allocations.data?.length || 0,

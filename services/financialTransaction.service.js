@@ -1,11 +1,13 @@
 const FundAllocationRepository = require('../repositories/fundAllocation.repository');
 const FinancialTransactionRepository = require('../repositories/financialTransaction.repository');
 const GeneralLedgerRepository = require('../repositories/generalLedger.repository');
+const PaymentService = require('./payment.service');
+
 
 class FinancialReportsService {
   async getGLStatement(glId, dateFrom, dateTo, userContext) {
     try {
-      const gl = await GeneralLedgerRepository.findById(glId, userContext);
+      const gl = await GeneralLedgerRepository.findById(glId);
       if (!gl) throw new Error('General Ledger not found');
 
       const query = {
@@ -15,7 +17,7 @@ class FinancialReportsService {
         limit: 1000
       };
 
-      const transactions = await FinancialTransactionRepository.findByQuery(query, userContext);
+      const transactions = await FinancialTransactionRepository.findByQuery(query);
 
       return {
         generalLedger: {
@@ -49,7 +51,7 @@ class FinancialReportsService {
 
   async getAllocationsSummary(userContext) {
     try {
-      const allocations = await FundAllocationRepository.findByQuery({ limit: 1000 }, userContext);
+      const allocations = await FundAllocationRepository.findByQuery({ limit: 1000 });
       
       const summary = {
         totalAllocations: allocations.data.length,

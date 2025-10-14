@@ -24,7 +24,7 @@ class BudgetService {
         );
       }
 
-      return await budgetRepository.create(data, userContext);
+      return await budgetRepository.create(data);
     } catch (error) {
       console.error('Error in createBudget service:', error);
       throw new Error(`Failed to create budget: ${error.message}`);
@@ -33,7 +33,7 @@ class BudgetService {
 
   async getBudgetById(id, userContext) {
     try {
-      return await budgetRepository.findById(id, userContext);
+      return await budgetRepository.findById(id);
     } catch (error) {
       console.error('Error in getBudgetById service:', error);
       throw new Error(`Failed to get budget: ${error.message}`);
@@ -42,7 +42,7 @@ class BudgetService {
 
   async searchBudgets(queryParams, userContext) {
     try {
-      return await budgetRepository.findByQuery(queryParams, userContext);
+      return await budgetRepository.findByQuery(queryParams);
     } catch (error) {
       console.error('Error in searchBudgets service:', error);
       throw new Error(`Failed to search budgets: ${error.message}`);
@@ -70,7 +70,7 @@ class BudgetService {
         );
       }
 
-      return await budgetRepository.updateById(id, updates, userContext);
+      return await budgetRepository.updateById(id, updates);
     } catch (error) {
       console.error('Error in updateBudget service:', error);
       throw new Error(`Failed to update budget: ${error.message}`);
@@ -79,7 +79,7 @@ class BudgetService {
 
   async deleteBudget(id, userContext) {
     try {
-      return await budgetRepository.deleteById(id, userContext);
+      return await budgetRepository.deleteById(id);
     } catch (error) {
       console.error('Error in deleteBudget service:', error);
       throw new Error(`Failed to delete budget: ${error.message}`);

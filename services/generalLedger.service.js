@@ -3,7 +3,7 @@ const GeneralLedgerRepository = require('../repositories/generalLedger.repositor
 class GeneralLedgerService {
   async createGL(data, userContext) {
     try {
-      return await GeneralLedgerRepository.create(data, userContext);
+      return await GeneralLedgerRepository.create(data);
     } catch (error) {
       console.error('Error in createGL service:', error);
       throw new Error(`Failed to create general ledger: ${error.message}`);
@@ -12,7 +12,7 @@ class GeneralLedgerService {
 
   async getGLById(id, userContext) {
     try {
-      return await GeneralLedgerRepository.findById(id, userContext);
+      return await GeneralLedgerRepository.findById(id);
     } catch (error) {
       console.error('Error in getGLById service:', error);
       throw new Error(`Failed to get general ledger: ${error.message}`);
@@ -21,7 +21,7 @@ class GeneralLedgerService {
 
   async searchGLs(queryParams, userContext) {
     try {
-      return await GeneralLedgerRepository.findByQuery(queryParams, userContext);
+      return await GeneralLedgerRepository.findByQuery(queryParams);
     } catch (error) {
       console.error('Error in searchGLs service:', error);
       throw new Error(`Failed to search general ledgers: ${error.message}`);
@@ -30,7 +30,7 @@ class GeneralLedgerService {
 
   async updateGL(id, updates, userContext) {
     try {
-      return await GeneralLedgerRepository.updateById(id, updates, userContext);
+      return await GeneralLedgerRepository.updateById(id, updates);
     } catch (error) {
       console.error('Error in updateGL service:', error);
       throw new Error(`Failed to update general ledger: ${error.message}`);
@@ -39,7 +39,7 @@ class GeneralLedgerService {
 
   async deleteGL(id, userContext) {
     try {
-      return await GeneralLedgerRepository.deleteById(id, userContext);
+      return await GeneralLedgerRepository.deleteById(id);
     } catch (error) {
       console.error('Error in deleteGL service:', error);
       throw new Error(`Failed to delete general ledger: ${error.message}`);
@@ -48,7 +48,7 @@ class GeneralLedgerService {
 
   async getGLBalance(glId, userContext) {
     try {
-      const gl = await GeneralLedgerRepository.findById(glId, userContext);
+      const gl = await GeneralLedgerRepository.findById(glId);
       if (!gl) throw new Error('General ledger not found');
       
       // Calculate available balance (current balance minus pending allocations)

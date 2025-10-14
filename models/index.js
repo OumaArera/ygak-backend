@@ -20,6 +20,10 @@ const Inventory = require('./inventory.model');
 const Event = require('./event.model');
 const EventMedia = require('./eventMedia.model');
 const Donation = require('./donation.model');
+const UpcomingProject = require('./upcomingProject.model');
+const ResourceLibrary = require('./resourceLibrary.model');
+const Blog = require('./blog.model');
+const Newsletter = require('./newsletter.model');
 
 
 User.hasMany(Token, { foreignKey: 'userId', as: 'tokens' });
@@ -133,5 +137,9 @@ module.exports = {
   Inventory,
   Event,
   EventMedia,
-  Donation
+  Donation,
+  UpcomingProject,
+  ResourceLibrary,
+  Blog,
+  Newsletter
 };

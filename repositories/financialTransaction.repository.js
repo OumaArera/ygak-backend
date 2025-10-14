@@ -18,19 +18,11 @@ class FinancialTransactionRepository {
       processedBy: userContext.id
     });
 
-    await activityTrackerService.logActivity({
-      userId: userContext.id,
-      model: "FinancialTransaction",
-      action: 'CREATE',
-      description: `Created financial transaction: ${data.transactionType}`,
-      ipAddress: userContext.ip,
-      userAgent: userContext.userAgent
-    });
 
     return result;
   }
 
-  async findById(id, userContext) {
+  async findById(id) {
     const result = await FinancialTransaction.findByPk(id, {
       include: [
         { model: GeneralLedger, as: 'generalLedger' },
@@ -41,19 +33,10 @@ class FinancialTransactionRepository {
       ]
     });
 
-    await activityTrackerService.logActivity({
-      userId: userContext.id,
-      model: "FinancialTransaction",
-      action: 'GET',
-      description: `Fetched financial transaction with ID: ${id}`,
-      ipAddress: userContext.ip,
-      userAgent: userContext.userAgent
-    });
-
     return result;
   }
 
-  async findByQuery(query, userContext) {
+  async findByQuery(query) {
     const { page, limit, transactionDateFrom, transactionDateTo, ...filters } = query;
     const where = {};
 
@@ -84,14 +67,6 @@ class FinancialTransactionRepository {
       limit
     });
 
-    await activityTrackerService.logActivity({
-      userId: userContext.id,
-      model: "FinancialTransaction",
-      action: 'GET',
-      description: `Queried financial transactions with params: ${JSON.stringify(query)}`,
-      ipAddress: userContext.ip,
-      userAgent: userContext.userAgent
-    });
 
     return result;
   }

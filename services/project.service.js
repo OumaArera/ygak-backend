@@ -12,7 +12,7 @@ class ProjectService {
 
   async getProjectById(id, userContext) {
     try {
-      return await projectRepository.findById(id, userContext);
+      return await projectRepository.findById(id);
     } catch (error) {
       console.error('Error in getProjectById service:', error);
       throw new Error(`Failed to get project: ${error.message}`);
@@ -21,7 +21,7 @@ class ProjectService {
 
   async searchProjects(queryParams, userContext) {
     try {
-      return await projectRepository.findByQuery(queryParams, userContext);
+      return await projectRepository.findByQuery(queryParams);
     } catch (error) {
       console.error('Error in searchProjects service:', error);
       throw new Error(`Failed to search projects: ${error.message}`);
@@ -30,7 +30,7 @@ class ProjectService {
 
   async updateProject(id, updates, userContext) {
     try {
-      return await projectRepository.updateById(id, updates, userContext);
+      return await projectRepository.updateById(id, updates);
     } catch (error) {
       console.error('Error in updateProject service:', error);
       throw new Error(`Failed to update project: ${error.message}`);
@@ -39,7 +39,7 @@ class ProjectService {
 
   async deleteProject(id, userContext) {
     try {
-      return await projectRepository.deleteById(id, userContext);
+      return await projectRepository.deleteById(id);
     } catch (error) {
       console.error('Error in deleteProject service:', error);
       throw new Error(`Failed to delete project: ${error.message}`);

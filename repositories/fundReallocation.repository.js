@@ -17,19 +17,10 @@ class FundReallocationRepository {
       requesterId: userContext.id
     });
 
-    await activityTrackerService.logActivity({
-      userId: userContext.id,
-      model: "FundReallocation",
-      action: 'CREATE',
-      description: `Created fund reallocation of ${data.reallocationAmount} from allocation ${data.fromAllocationId} to budget ${data.toBudgetId}`,
-      ipAddress: userContext.ip,
-      userAgent: userContext.userAgent
-    });
-
     return result;
   }
 
-  async findById(id, userContext) {
+  async findById(id) {
     const result = await FundReallocation.findByPk(id, {
       include: [
         { model: User, as: 'requester', attributes: { exclude: ['password'] } },
@@ -45,19 +36,10 @@ class FundReallocationRepository {
       ]
     });
 
-    await activityTrackerService.logActivity({
-      userId: userContext.id,
-      model: "FundReallocation",
-      action: 'GET',
-      description: `Fetched fund reallocation with ID: ${id}`,
-      ipAddress: userContext.ip,
-      userAgent: userContext.userAgent
-    });
-
     return result;
   }
 
-  async findByQuery(query, userContext) {
+  async findByQuery(query) {
     const { page, limit, ...filters } = query;
     const where = {};
 
@@ -87,50 +69,23 @@ class FundReallocationRepository {
       limit
     });
 
-    await activityTrackerService.logActivity({
-      userId: userContext.id,
-      model: "FundReallocation",
-      action: 'GET',
-      description: `Queried fund reallocations with params: ${JSON.stringify(query)}`,
-      ipAddress: userContext.ip,
-      userAgent: userContext.userAgent
-    });
-
     return result;
   }
 
-  async updateById(id, updates, userContext) {
+  async updateById(id, updates) {
     const fundReallocation = await FundReallocation.findByPk(id);
     if (!fundReallocation) return null;
 
     const result = await fundReallocation.update(updates);
 
-    await activityTrackerService.logActivity({
-      userId: userContext.id,
-      model: "FundReallocation",
-      action: 'UPDATE',
-      description: `Updated fund reallocation ${id}: ${JSON.stringify(updates)}`,
-      ipAddress: userContext.ip,
-      userAgent: userContext.userAgent
-    });
-
     return result;
   }
 
-  async deleteById(id, userContext) {
+  async deleteById(id) {
     const fundReallocation = await FundReallocation.findByPk(id);
     if (!fundReallocation) return null;
 
     await fundReallocation.destroy();
-
-    await activityTrackerService.logActivity({
-      userId: userContext.id,
-      model: "FundReallocation",
-      action: 'DELETE',
-      description: `Deleted fund reallocation with ID: ${id}`,
-      ipAddress: userContext.ip,
-      userAgent: userContext.userAgent
-    });
 
     return fundReallocation;
   }

@@ -16,19 +16,10 @@ class FundRequestRepository {
       requesterId: userContext.id
     });
 
-    await activityTrackerService.logActivity({
-      userId: userContext.id,
-      model: "FundRequest",
-      action: 'CREATE',
-      description: `Created fund request for ${data.requestedAmount}`,
-      ipAddress: userContext.ip,
-      userAgent: userContext.userAgent
-    });
-
     return result;
   }
 
-  async findById(id, userContext) {
+  async findById(id) {
     const result = await FundRequest.findByPk(id, {
       include: [
         { model: User, as: 'requester', attributes: { exclude: ['password'] } },
@@ -38,19 +29,10 @@ class FundRequestRepository {
       ]
     });
 
-    await activityTrackerService.logActivity({
-      userId: userContext.id,
-      model: "FundRequest",
-      action: 'GET',
-      description: `Fetched fund request with ID: ${id}`,
-      ipAddress: userContext.ip,
-      userAgent: userContext.userAgent
-    });
-
     return result;
   }
 
-  async findByQuery(query, userContext) {
+  async findByQuery(query) {
     const { page, limit, ...filters } = query;
     const where = {};
 
@@ -73,50 +55,23 @@ class FundRequestRepository {
       limit
     });
 
-    await activityTrackerService.logActivity({
-      userId: userContext.id,
-      model: "FundRequest",
-      action: 'GET',
-      description: `Queried fund requests with params: ${JSON.stringify(query)}`,
-      ipAddress: userContext.ip,
-      userAgent: userContext.userAgent
-    });
-
     return result;
   }
 
-  async updateById(id, updates, userContext) {
+  async updateById(id, updates) {
     const fundRequest = await FundRequest.findByPk(id);
     if (!fundRequest) return null;
 
     const result = await fundRequest.update(updates);
 
-    await activityTrackerService.logActivity({
-      userId: userContext.id,
-      model: "FundRequest",
-      action: 'UPDATE',
-      description: `Updated fund request ${id}: ${JSON.stringify(updates)}`,
-      ipAddress: userContext.ip,
-      userAgent: userContext.userAgent
-    });
-
     return result;
   }
 
-  async deleteById(id, userContext) {
+  async deleteById(id) {
     const fundRequest = await FundRequest.findByPk(id);
     if (!fundRequest) return null;
 
     await fundRequest.destroy();
-
-    await activityTrackerService.logActivity({
-      userId: userContext.id,
-      model: "FundRequest",
-      action: 'DELETE',
-      description: `Deleted fund request with ID: ${id}`,
-      ipAddress: userContext.ip,
-      userAgent: userContext.userAgent
-    });
 
     return fundRequest;
   }

@@ -7,8 +7,8 @@ class AuthController {
   async login(req, res) {
     try {
       const { email, password } = req.body;
-      const user = req.user ? req.user : {}
-      const token = await AuthService.login(email, password, user);
+      
+      const token = await AuthService.login(email, password);
       res.status(200).json({success: true, data: token });
     } catch (err) {
       res.status(400).json({success: false, error:err.message});
@@ -70,7 +70,7 @@ class AuthController {
   async changePassword(req, res) {
     try {
       const {email, oldPassword, newPassword } = req.body;
-      const result = await AuthService.changePassword(email, oldPassword, newPassword, req.user);
+      const result = await AuthService.changePassword(email, oldPassword, newPassword);
       res.status(200).json({success: true, data: result});
     } catch (err) {
       res.status(400).json({success: false, error:err.message});

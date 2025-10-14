@@ -4,24 +4,19 @@ const reportRepository = require('../repositories/report.repository');
 const { saveFile } = require('../utils/fileStorage');
 
 class ReportService {
-  /**
-   * Processes the uploaded file and returns the stored file URL/path
-   */
+  
   async processFile(file, address) {
     if (!file) return undefined;
 
     let fileBuffer;
     let fileName;
 
-    // If coming from diskStorage
     if (file.path) {
       fileBuffer = await fs.readFile(file.path);
       fileName = path.basename(file.path);
 
-      // Clean up temp file after reading
       await fs.unlink(file.path).catch(() => {});
     }
-    // If coming from memoryStorage or similar
     else if (file.buffer) {
       fileBuffer = file.buffer;
       fileName = file.originalname;
@@ -29,7 +24,6 @@ class ReportService {
       return undefined;
     }
 
-    // Save file to permanent storage
     return await saveFile(
       fileBuffer,
       fileName,
@@ -45,7 +39,7 @@ class ReportService {
         data.content = await this.processFile(data.content, address);
       }
 
-      return await reportRepository.create(data, userContext);
+      return await reportRepository.create(data);
     } catch (error) {
       console.error('Error in createReport service:', error);
       throw new Error(`Failed to create report: ${error.message}`);
@@ -54,7 +48,7 @@ class ReportService {
 
   async getReportById(id, userContext) {
     try {
-      return await reportRepository.findById(id, userContext);
+      return await reportRepository.findById(id);
     } catch (error) {
       console.error('Error in getReportById service:', error);
       throw new Error(`Failed to get report: ${error.message}`);
@@ -63,7 +57,7 @@ class ReportService {
 
   async searchReports(queryParams, userContext) {
     try {
-      return await reportRepository.findByQuery(queryParams, userContext);
+      return await reportRepository.findByQuery(queryParams);
     } catch (error) {
       console.error('Error in searchReports service:', error);
       throw new Error(`Failed to search reports: ${error.message}`);
@@ -77,7 +71,7 @@ class ReportService {
         updates.content = await this.processFile(updates.content, address);
       }
 
-      return await reportRepository.updateById(id, updates, userContext);
+      return await reportRepository.updateById(id, updates);
     } catch (error) {
       console.error('Error in updateReport service:', error);
       throw new Error(`Failed to update report: ${error.message}`);
@@ -86,7 +80,7 @@ class ReportService {
 
   async deleteReport(id, userContext) {
     try {
-      return await reportRepository.deleteById(id, userContext);
+      return await reportRepository.deleteById(id);
     } catch (error) {
       console.error('Error in deleteReport service:', error);
       throw new Error(`Failed to delete report: ${error.message}`);
