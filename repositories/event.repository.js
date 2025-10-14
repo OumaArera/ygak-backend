@@ -22,7 +22,10 @@ class EventRepository {
     const where = {};
 
     for (const [key, value] of Object.entries(filters)) {
-      if (typeof value === 'string') {
+      if (key === 'date' && value) {
+        // Only include events strictly after the provided date
+        where.date = { [Op.gt]: value };
+      } else if (typeof value === 'string') {
         where[key] = { [Op.iLike]: `%${value}%` };
       } else {
         where[key] = value;
@@ -32,11 +35,12 @@ class EventRepository {
     const result = await paginationUtil.paginate(Event, {
       where,
       page,
-      limit
+      limit,
     });
 
     return result;
   }
+
 
  
   async updateById(id, updates) {
