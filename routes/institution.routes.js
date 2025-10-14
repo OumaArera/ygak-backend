@@ -19,14 +19,10 @@ router.post(
 
 router.get(
   '/', 
-  authenticateToken, 
-  authorizeRolesFromMapping('AllUsers'),
   InstitutionController.search
 );
 router.get(
   '/:id', 
-  authenticateToken, 
-  authorizeRolesFromMapping('AllUsers'),
   InstitutionController.getById
 );
 

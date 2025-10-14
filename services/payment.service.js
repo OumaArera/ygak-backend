@@ -43,8 +43,7 @@ class PaymentService {
 
       // Check if total payments would exceed budget amount
       const existingPayments = await PaymentRepository.findByQuery(
-        { budgetId: data.budgetId, status: 'completed' }, 
-        userContext
+        { budgetId: data.budgetId, status: 'completed' },
       );
       
       const totalPaid = existingPayments.data.reduce(
@@ -65,7 +64,7 @@ class PaymentService {
         status: newRemainingAmount <= 0 ? 'fully_utilized' : 'active'
       };
       
-      await FundAllocationRepository.updateById(allocation.id, allocationUpdates, userContext);
+      await FundAllocationRepository.updateById(allocation.id, allocationUpdates);
 
       // Create financial transaction
       const transactionData = {
@@ -81,7 +80,7 @@ class PaymentService {
       };
 
       // Calculate running balance
-      const gl = await GeneralLedgerRepository.findById(allocation.glId, userContext);
+      const gl = await GeneralLedgerRepository.findById(allocation.glId);
       transactionData.runningBalance = parseFloat(gl.currentBalance) - parseFloat(data.paymentAmount);
 
       await FinancialTransactionRepository.create(transactionData, userContext);
@@ -113,7 +112,7 @@ class PaymentService {
 
   async getPaymentById(id, userContext) {
     try {
-      return await PaymentRepository.findById(id, userContext);
+      return await PaymentRepository.findById(id);
     } catch (error) {
       console.error('Error in getPaymentById service:', error);
       throw new Error(`Failed to get payment: ${error.message}`);
@@ -122,7 +121,7 @@ class PaymentService {
 
   async searchPayments(queryParams, userContext) {
     try {
-      return await PaymentRepository.findByQuery(queryParams, userContext);
+      return await PaymentRepository.findByQuery(queryParams);
     } catch (error) {
       console.error('Error in searchPayments service:', error);
       throw new Error(`Failed to search payments: ${error.message}`);
@@ -144,7 +143,7 @@ class PaymentService {
         );
       }
 
-      const result = await PaymentRepository.updateById(id, updates, userContext);
+      const result = await PaymentRepository.updateById(id, updates);
       
       await transaction.commit();
       return result;
@@ -161,13 +160,11 @@ class PaymentService {
       if (!budget) throw new Error('Budget not found');
 
       const payments = await PaymentRepository.findByQuery(
-        { budgetId, status: 'completed' },
-        userContext
+        { budgetId, status: 'completed' }
       );
 
       const allocations = await FundAllocationRepository.findByQuery(
-        { budgetId },
-        userContext
+        { budgetId }
       );
 
       const totalBudgetAmount = parseFloat(budget.amount);

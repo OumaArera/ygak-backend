@@ -1,25 +1,15 @@
 const { Report, User, Budget, Task } = require('../models');
-const activityTrackerService = require('../services/activityTracker.service');
 const { Op } = require('sequelize');
 const paginationUtil = require('../utils/pagination');
 
 class ReportRepository {
-  async create(data, userContext) {
+  async create(data) {
     const result = await Report.create(data);
-
-    await activityTrackerService.logActivity({
-      userId: userContext.id,
-      model: "Report",
-      action: 'CREATE',
-      description: `Created a new report with data: ${JSON.stringify(data)}`,
-      ipAddress: userContext.ip,
-      userAgent: userContext.userAgent
-    });
 
     return result;
   }
 
-  async findById(id, userContext) {
+  async findById(id) {
     const result = await Report.findByPk(id, {
       attributes: { exclude: ['userId', 'budgetId'] },
       include: [
@@ -39,19 +29,10 @@ class ReportRepository {
       ]
     });
 
-    await activityTrackerService.logActivity({
-      userId: userContext.id,
-      model: "Report",
-      action: 'GET',
-      description: `Fetched report with ID: ${id}`,
-      ipAddress: userContext.ip,
-      userAgent: userContext.userAgent
-    });
-
     return result;
   }
 
-  async findByQuery(query, userContext) {
+  async findByQuery(query) {
     const { page, limit, ...filters } = query;
     const where = {};
 
@@ -85,50 +66,23 @@ class ReportRepository {
       limit
     });
 
-    await activityTrackerService.logActivity({
-      userId: userContext.id,
-      model: "Report",
-      action: 'GET',
-      description: `Queried reports with params: ${JSON.stringify(query)}`,
-      ipAddress: userContext.ip,
-      userAgent: userContext.userAgent
-    });
-
     return result;
   }
 
-  async updateById(id, updates, userContext) {
+  async updateById(id, updates) {
     const report = await Report.findByPk(id);
     if (!report) return null;
 
     const result = await report.update(updates);
 
-    await activityTrackerService.logActivity({
-      userId: userContext.id,
-      model: "Report",
-      action: 'UPDATE',
-      description: `Updated report with ID: ${id}, Payload: ${JSON.stringify(updates)}`,
-      ipAddress: userContext.ip,
-      userAgent: userContext.userAgent
-    });
-
     return result;
   }
 
-  async deleteById(id, userContext) {
+  async deleteById(id) {
     const report = await Report.findByPk(id);
     if (!report) return null;
 
     await report.destroy();
-
-    await activityTrackerService.logActivity({
-      userId: userContext.id,
-      model: "Report",
-      action: 'DELETE',
-      description: `Deleted report with ID: ${id}`,
-      ipAddress: userContext.ip,
-      userAgent: userContext.userAgent
-    });
 
     return report;
   }

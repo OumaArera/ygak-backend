@@ -36,7 +36,7 @@ class FundRequestService {
 
   async getFundRequestById(id, userContext) {
     try {
-      return await FundRequestRepository.findById(id, userContext);
+      return await FundRequestRepository.findById(id);
     } catch (error) {
       console.error('Error in getFundRequestById service:', error);
       throw new Error(`Failed to get fund request: ${error.message}`);
@@ -45,7 +45,7 @@ class FundRequestService {
 
   async searchFundRequests(queryParams, userContext) {
     try {
-      return await FundRequestRepository.findByQuery(queryParams, userContext);
+      return await FundRequestRepository.findByQuery(queryParams);
     } catch (error) {
       console.error('Error in searchFundRequests service:', error);
       throw new Error(`Failed to search fund requests: ${error.message}`);
@@ -56,7 +56,7 @@ class FundRequestService {
     const transaction = await sequelize.transaction();
     
     try {
-      const fundRequest = await FundRequestRepository.findById(id, userContext);
+      const fundRequest = await FundRequestRepository.findById(id);
       if (!fundRequest) {
         throw new Error('Fund request not found');
       }
@@ -76,7 +76,7 @@ class FundRequestService {
         updates.status = 'Allocated'; // allocation sets it to Allocated
       }
 
-      const result = await FundRequestRepository.updateById(id, updates, userContext);
+      const result = await FundRequestRepository.updateById(id, updates);
 
       await transaction.commit();
       return result;

@@ -8,10 +8,8 @@ const validate = require('../middlewares/validate.middleware');
 // Routes
 router.post(
   '/',
-  authenticateToken,
   VolunteerValidation.createRules(),
   validate,
-  authorizeRolesFromMapping('AllUsers'),
   VolunteerController.create
 );
 

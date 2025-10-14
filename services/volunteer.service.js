@@ -6,24 +6,24 @@ const { generateWelcomeEmail } = require('../utils/welcomeEmail.html');
 
 
 class VolunteerService {
-  async createVolunteer(data, userContext) {
+  async createVolunteer(data) {
     let regNumber = data.regNumber;
     if (!regNumber || regNumber.trim() === '') {
       regNumber = await generateRegistrationNumber();
     }
-    return volunteerRepository.create({...data, regNumber}, userContext);
+    return volunteerRepository.create({...data, regNumber}, );
   }
 
-  async getVolunteerById(id, userContext) {
-    return volunteerRepository.findById(id, userContext);
+  async getVolunteerById(id) {
+    return volunteerRepository.findById(id);
   }
 
-  async searchVolunteers(queryParams, userContext) {
-    return volunteerRepository.findByQuery(queryParams, userContext);
+  async searchVolunteers(queryParams) {
+    return volunteerRepository.findByQuery(queryParams);
   }
 
-  async updateVolunteer(id, updates, userContext) {
-    const updatedVolunteer = await volunteerRepository.updateById(id, updates, userContext);
+  async updateVolunteer(id, updates) {
+    const updatedVolunteer = await volunteerRepository.updateById(id, updates);
 
     if (!updatedVolunteer) return null;
 
@@ -58,8 +58,8 @@ class VolunteerService {
   }
 
 
-  async deleteVolunteer(id, userContext) {
-    return volunteerRepository.deleteById(id, userContext);
+  async deleteVolunteer(id) {
+    return volunteerRepository.deleteById(id);
   }
 }
 

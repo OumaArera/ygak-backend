@@ -3,16 +3,25 @@ const VolunteerService = require('../services/volunteer.service');
 class VolunteerController {
   async create(req, res) {
     try {
-      const volunteer = await VolunteerService.createVolunteer(req.body, req.user);
+      const volunteer = await VolunteerService.createVolunteer(req.body);
       res.status(201).json({success: true, data:volunteer});
     } catch (err) {
-      res.status(500).json({success: false, error:err.message});
-    }
+        console.error(err);
+        return res.status(500).json({
+          success: false,
+          error: err.message,
+          details: err.errors ? err.errors.map(e => ({
+            field: e.path,
+            message: e.message,
+            value: e.value
+          })) : undefined
+        });
+      }
   }
 
   async getById(req, res) {
     try {
-      const volunteer = await VolunteerService.getVolunteerById(req.params.id, req.user);
+      const volunteer = await VolunteerService.getVolunteerById(req.params.id);
       if (!volunteer) {
         return res.status(404).json({success: false, error: 'Volunteer not found' });
       }
@@ -24,7 +33,7 @@ class VolunteerController {
 
   async search(req, res) {
     try {
-      const volunteers = await VolunteerService.searchVolunteers(req.query, req.user);
+      const volunteers = await VolunteerService.searchVolunteers(req.query);
       res.status(200).json({success: true, data:volunteers});
     } catch (err) {
       res.status(500).json({success: false, error:err.message});
@@ -33,7 +42,7 @@ class VolunteerController {
 
   async update(req, res) {
     try {
-      const updated = await VolunteerService.updateVolunteer(req.params.id, req.body, req.user);
+      const updated = await VolunteerService.updateVolunteer(req.params.id, req.body);
       if (!updated) {
         return res.status(404).json({success: false, error: 'Volunteer not found' });
       }
@@ -45,7 +54,7 @@ class VolunteerController {
 
   async delete(req, res) {
     try {
-      const deleted = await VolunteerService.deleteVolunteer(req.params.id, req.user);
+      const deleted = await VolunteerService.deleteVolunteer(req.params.id);
       if (!deleted) {
         return res.status(404).json({success: false, error: 'Volunteer not found' });
       }

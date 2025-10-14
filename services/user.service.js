@@ -26,35 +26,35 @@ class UserService {
     return await userRepository.create({
       ...userData,
       password
-    }, userContext);
+    });
   }
 
   /**
    * Get a user by ID
    */
   async getUserById(id, userContext) {
-    return await userRepository.findById(id, userContext);
+    return await userRepository.findById(id);
   }
 
   /**
    * Search users based on query params
    */
   async searchUsers(queryParams, userContext) {
-    return await userRepository.findByQuery(queryParams, userContext);
+    return await userRepository.findByQuery(queryParams);
   }
 
   /**
    * Update a user
    */
   async updateUser(id, updates, userContext) {
-    return await userRepository.updateById(id, updates, userContext);
+    return await userRepository.updateById(id, updates);
   }
 
   /**
    * Delete a user
    */
   async deleteUser(id, userContext) {
-    return await userRepository.deleteById(id, userContext);
+    return await userRepository.deleteById(id);
   }
 }
 

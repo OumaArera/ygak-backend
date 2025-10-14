@@ -121,7 +121,6 @@ class VolunteerDeserializer {
         .notEmpty()
         .withMessage('Nationality is required'),
 
-      // Status Flags
       body('isApproved').optional().isBoolean(),
       body('isExpelled').optional().isBoolean(),
       body('isSuspended').optional().isBoolean(),

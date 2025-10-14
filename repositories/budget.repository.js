@@ -1,25 +1,15 @@
 const { Budget, User } = require('../models');
-const activityTrackerService = require('../services/activityTracker.service');
 const { Op } = require('sequelize');
 const paginationUtil = require('../utils/pagination');
 
 class BudgetRepository {
-  async create(data, userContext) {
+  async create(data) {
     const result = await Budget.create(data);
-
-    await activityTrackerService.logActivity({
-      userId: userContext.id,
-      model: "Budget",
-      action: 'CREATE',
-      description: `Created a new budget with data: ${JSON.stringify(data)}`,
-      ipAddress: userContext.ip,
-      userAgent: userContext.userAgent
-    });
 
     return result;
   }
 
-  async findById(id, userContext) {
+  async findById(id) {
     const result = await Budget.findByPk(id, {
       attributes: { exclude: ['userId'] },
       include: [
@@ -31,19 +21,10 @@ class BudgetRepository {
       ]
     });
 
-    await activityTrackerService.logActivity({
-      userId: userContext.id,
-      model: "Budget",
-      action: 'GET',
-      description: `Fetched budget with ID: ${id}`,
-      ipAddress: userContext.ip,
-      userAgent: userContext.userAgent
-    });
-
     return result;
   }
 
-  async findByQuery(query, userContext) {
+  async findByQuery(query) {
     const { page, limit, ...filters } = query;
     const where = {};
 
@@ -69,51 +50,24 @@ class BudgetRepository {
       limit
     });
 
-    await activityTrackerService.logActivity({
-      userId: userContext.id,
-      model: "Budget",
-      action: 'GET',
-      description: `Queried budgets with params: ${JSON.stringify(query)}`,
-      ipAddress: userContext.ip,
-      userAgent: userContext.userAgent
-    });
-
     return result;
   }
 
 
-  async updateById(id, updates, userContext) {
+  async updateById(id, updates) {
     const budget = await Budget.findByPk(id);
     if (!budget) return null;
 
     const result = await budget.update(updates);
 
-    await activityTrackerService.logActivity({
-      userId: userContext.id,
-      model: "Budget",
-      action: 'UPDATE',
-      description: `Updated budget with ID: ${id}, Payload: ${JSON.stringify(updates)}`,
-      ipAddress: userContext.ip,
-      userAgent: userContext.userAgent
-    });
-
     return result;
   }
 
-  async deleteById(id, userContext) {
+  async deleteById(id) {
     const budget = await Budget.findByPk(id);
     if (!budget) return null;
 
     await budget.destroy();
-
-    await activityTrackerService.logActivity({
-      userId: userContext.id,
-      model: "Budget",
-      action: 'DELETE',
-      description: `Deleted budget with ID: ${id}`,
-      ipAddress: userContext.ip,
-      userAgent: userContext.userAgent
-    });
 
     return budget;
   }

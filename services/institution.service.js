@@ -1,24 +1,24 @@
 const institutionRepository = require('../repositories/institution.repository');
 
 class InstitutionService {
-  async createInstitution(data, userContext) {
-    return institutionRepository.create(data, userContext);
+  async createInstitution(data) {
+    return institutionRepository.create(data);
   }
 
-  async getInstitutionById(id, userContext) {
-    return institutionRepository.findById(id, userContext);
+  async getInstitutionById(id) {
+    return institutionRepository.findById(id);
   }
 
-  async searchInstitutions(queryParams, userContext) {
-    return institutionRepository.findByQuery(queryParams, userContext);
+  async searchInstitutions(queryParams, ) {
+    return institutionRepository.findByQuery(queryParams);
   }
 
-  async updateInstitution(id, updates, userContext) {
-    return institutionRepository.updateById(id, updates, userContext);
+  async updateInstitution(id, updates) {
+    return institutionRepository.updateById(id, updates);
   }
 
   async deleteInstitution(id, userContext) {
-    return institutionRepository.deleteById(id, userContext);
+    return institutionRepository.deleteById(id);
   }
 }
 

@@ -18,7 +18,6 @@ module.exports = {
         require: true,
         rejectUnauthorized: true,
         ca: sslCa,
-        // servername: process.env.DB_HOST,  <-- optional, usually inferred automatically
       },
       family: 4,
     },

@@ -23,6 +23,10 @@ const inventoryRouter = require('./inventory.routes');
 const eventRouter = require('./event.routes');
 const eventMediaRouter = require('./eventMedia.routes');
 const donationRouter = require('./donation.routes');
+const upcomingProjectsRouter = require('./upcomingProject.routes');
+const resouceLibraryRouter = require('./resourceLibrary.routes');
+const blogRouter = require('./blog.routes');
+const newsletterRouter = require('./newsletter.routes');
 
 // Mount routes
 router.use('/users', userRouter);
@@ -46,5 +50,9 @@ router.use('/inventories', inventoryRouter);
 router.use('/upcoming-events', eventRouter);
 router.use('/events-media', eventMediaRouter);
 router.use('/donations', donationRouter);
+router.use('/upcoming-projects', upcomingProjectsRouter);
+router.use('/resource-library', resouceLibraryRouter);
+router.use('/blogs', blogRouter);
+router.use('/newsletter', newsletterRouter);
 
 module.exports = router;

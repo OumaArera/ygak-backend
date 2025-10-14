@@ -8,25 +8,22 @@ class AuthService {
   /**
    * Authenticate a user and return JWT token
    */
-  async login(email, password, userContext) {
-    const user = await authRepository.findUserForLogin(email, userContext);
+  async login(email, password) {
+    const user = await authRepository.findUserForLogin(email);
 
     if (!user) {
       throw new Error('Invalid credentials');
     }
 
-    // Check if user is active
     if (!user.isActive) {
       throw new Error('User account is blocked. Contact administrator.');
     }
 
-    // Validate password using model method
     const isMatch = await User.validatePassword(password, user.password);
     if (!isMatch) {
       throw new Error('Invalid credentials');
     }
 
-    // Create JWT with all requested fields
     const payload = {
       id: user.id,
       firstName: user.firstName,
@@ -67,7 +64,7 @@ class AuthService {
    * Block a user (set isActive to false)
    */
   async blockUser(userId, userContext) {
-    const updatedUser = await userRepository.updateById(userId, { isActive: false }, userContext);
+    const updatedUser = await userRepository.updateById(userId, { isActive: false });
     return updatedUser;
   }
 
@@ -75,7 +72,7 @@ class AuthService {
    * Unblock a user (set isActive to true)
    */
   async unblockUser(userId, userContext) {
-    const updatedUser = await userRepository.updateById(userId, { isActive: true }, userContext);
+    const updatedUser = await userRepository.updateById(userId, { isActive: true });
     return updatedUser;
   }
 
@@ -93,25 +90,20 @@ class AuthService {
   /**
    * Change user password
    */
-  async changePassword(email, oldPassword, newPassword, userContext) {
-    // const user = await userRepository.findById(id, userContext);
-    const user = authRepository.findUserForLogin(email, userContext);
+  async changePassword(email, oldPassword, newPassword) {
+    const user = authRepository.findUserForLogin(email);
     if (!user) {
       throw new Error('User not found');
     }
 
-    // Validate old password
     const isMatch = await User.validatePassword(oldPassword, user.password);
     if (!isMatch) {
       throw new Error('Old password is incorrect');
     }
 
-    // Hash new password
-    // const hashedPassword = await User.hashPassword(newPassword);
     const hashedPassword = await bcrypt.hash(newPassword, 10);
 
-    // Update password in database
-    await userRepository.updateById(user.id, { password: hashedPassword }, userContext);
+    await userRepository.updateById(user.id, { password: hashedPassword });
 
     return { message: 'Password updated successfully' };
   }

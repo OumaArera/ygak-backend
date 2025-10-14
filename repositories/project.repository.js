@@ -8,19 +8,10 @@ class ProjectRepository {
     data.maker = userContext.id
     const result = await Project.create(data);
 
-    await activityTrackerService.logActivity({
-      userId: userContext.id,
-      model: "Project",
-      action: 'CREATE',
-      description: `Created a new project with data: ${JSON.stringify(data)}`,
-      ipAddress: userContext.ip,
-      userAgent: userContext.userAgent
-    });
-
     return result;
   }
 
-  async findById(id, userContext) {
+  async findById(id) {
     const result = await Project.findByPk(id, {
       attributes: { exclude: ['maker', 'budgetId'] },
       include: [
@@ -36,19 +27,10 @@ class ProjectRepository {
       ]
     });
 
-    await activityTrackerService.logActivity({
-      userId: userContext.id,
-      model: "Project",
-      action: 'GET',
-      description: `Fetched project with ID: ${id}`,
-      ipAddress: userContext.ip,
-      userAgent: userContext.userAgent
-    });
-
     return result;
   }
 
-  async findByQuery(query, userContext) {
+  async findByQuery(query) {
     const { page, limit, ...filters } = query;
     const where = {};
 
@@ -78,50 +60,23 @@ class ProjectRepository {
       limit
     });
 
-    await activityTrackerService.logActivity({
-      userId: userContext.id,
-      model: "Project",
-      action: 'GET',
-      description: `Queried projects with params: ${JSON.stringify(query)}`,
-      ipAddress: userContext.ip,
-      userAgent: userContext.userAgent
-    });
-
     return result;
   }
 
-  async updateById(id, updates, userContext) {
+  async updateById(id, updates) {
     const project = await Project.findByPk(id);
     if (!project) return null;
 
     const result = await project.update(updates);
 
-    await activityTrackerService.logActivity({
-      userId: userContext.id,
-      model: "Project",
-      action: 'UPDATE',
-      description: `Updated project with ID: ${id}, Payload: ${JSON.stringify(updates)}`,
-      ipAddress: userContext.ip,
-      userAgent: userContext.userAgent
-    });
-
     return result;
   }
 
-  async deleteById(id, userContext) {
+  async deleteById(id) {
     const project = await Project.findByPk(id);
     if (!project) return null;
 
     await project.destroy();
-
-    await activityTrackerService.logActivity({
-      userId: userContext.id,
-      model: "Project",
-      action: 'DELETE',
-      description: `Deleted project with ID: ${id}`,
-      ipAddress: userContext.ip,
-      userAgent: userContext.userAgent
-    });
 
     return project;
   }
