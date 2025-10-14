@@ -8,7 +8,7 @@ const { authorizeRolesFromMapping } = require('../middlewares/roles.middleware')
 router.get(
   '/gl/:glId/statement',
   authenticateToken,
-  authorizeRolesFromMapping('BoardTreasurerAccess'),
+  authorizeRolesFromMapping('AllBoardMembers'),
   FinancialReportsController.getGLStatement
 );
 
@@ -22,7 +22,7 @@ router.get(
 router.get(
   '/allocations/summary',
   authenticateToken,
-  authorizeRolesFromMapping('BoardTreasurerAccess'),
+  authorizeRolesFromMapping('AllBoardMembers'),
   FinancialReportsController.getAllocationsSummary
 );
 
@@ -34,4 +34,3 @@ router.get(
 );
 
 module.exports = router;
-

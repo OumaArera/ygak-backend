@@ -34,7 +34,7 @@ router.put(
   authenticateToken,
   UserValidation.updateRules(),
   validate,
-  authorizeRolesFromMapping('ITSuperuserAccess'),
+  authorizeRolesFromMapping('AllBoardMembers'),
   UserController.updateUser
 );
 

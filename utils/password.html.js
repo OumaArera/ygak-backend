@@ -19,7 +19,7 @@ function generateAccountCredentialsEmail(name, username, password) {
         </div>
 
         <p>For your security, we strongly recommend changing your password after your first login.</p>
-        <p>You can log in to the system here: <a href="https://ygak.org/login" style="color: #007bff; text-decoration: none;">YGAK Login Portal</a></p>
+        <p>You can log in to the system here: <a href="https://dashboard.ygak.org/login" style="color: #007bff; text-decoration: none;">YGAK Login Portal</a></p>
 
         <br/>
         <p>Best regards,</p>

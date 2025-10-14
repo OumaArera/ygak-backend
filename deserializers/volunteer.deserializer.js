@@ -71,10 +71,17 @@ class VolunteerDeserializer {
           return true;
         }),
 
-      body('nextOfKinEmail')
-        .optional()
-        .isEmail()
-        .withMessage('Next of kin email must be valid'),
+     body('nextOfKinEmail')
+        .optional({ nullable: true })
+        .custom((value) => {
+   	   if (value === null || value === undefined || value === '') {
+  	      return true; // allow null, undefined, or empty string
+	    }
+          if (!/\S+@\S+\.\S+/.test(value)) {
+     	      throw new Error('Next of kin email must be valid');
+   	   }
+   	 return true;
+       }),,
 
       // Student / Non-student logic
       body('isStudent')
@@ -121,6 +128,7 @@ class VolunteerDeserializer {
         .notEmpty()
         .withMessage('Nationality is required'),
 
+      // Status Flags
       body('isApproved').optional().isBoolean(),
       body('isExpelled').optional().isBoolean(),
       body('isSuspended').optional().isBoolean(),

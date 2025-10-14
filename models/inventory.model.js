@@ -18,7 +18,7 @@ const Inventory = sequelize.define(
         model: User,
         key: 'id',
       },
-      field: 'current_user_id',
+     field: 'current_user_id',
     },
     // Core fields
     name: {

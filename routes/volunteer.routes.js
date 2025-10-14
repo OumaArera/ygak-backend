@@ -17,14 +17,14 @@ router.get(
   '/',
   authenticateToken,
   VolunteerValidation.queryRules(),
-  authorizeRolesFromMapping('AllBoardMembers'),
+  authorizeRolesFromMapping('AllUsers'),
   VolunteerController.search
 );
 
 router.get(
   '/:id',
   authenticateToken,
-  authorizeRolesFromMapping('AllBoardMembers'),
+  authorizeRolesFromMapping('AllUsers'),
   VolunteerController.getById
 );
 
@@ -33,7 +33,7 @@ router.put(
   authenticateToken,
   VolunteerValidation.updateRules(),
   validate,
-  authorizeRolesFromMapping('ITSuperuserAccess'),
+  authorizeRolesFromMapping('AllUsers'),
   VolunteerController.update
 );
 

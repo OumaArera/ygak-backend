@@ -37,7 +37,7 @@ router.put(
   authenticateToken,
   FundRequestDeserializer.updateRules(),
   validate,
-  authorizeRolesFromMapping('BoardTreasurerAccess'),
+  authorizeRolesFromMapping('AllBoardMembers'),
   FundRequestController.update
 );
 

@@ -13,7 +13,7 @@ router.post(
   authenticateToken,
   InventoryValidation.createRules(),
   validate,
-  authorizeRolesFromMapping('BoardSecretaryAccess'),
+  authorizeRolesFromMapping('AllUsers'),
   InventoryController.create
 );
 
@@ -22,14 +22,14 @@ router.get(
   authenticateToken,
   InventoryValidation.queryRules(),
   validate,
-  authorizeRolesFromMapping('AllBoardMembers'),
+  authorizeRolesFromMapping('AllUsers'),
   InventoryController.search
 );
 
 router.get(
   '/:id',
   authenticateToken,
-  authorizeRolesFromMapping('AllBoardMembers'),
+  authorizeRolesFromMapping('AllUsers'),
   InventoryController.getById
 );
 
