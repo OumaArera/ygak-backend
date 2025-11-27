@@ -25,6 +25,7 @@ const ResourceLibrary = require('./resourceLibrary.model');
 const Blog = require('./blog.model');
 const Newsletter = require('./newsletter.model');
 const EventRegister = require('./eventRegister.model');
+const Contact = require('./contact.model');
 
 
 User.hasMany(Token, { foreignKey: 'userId', as: 'tokens' });
@@ -147,5 +148,6 @@ module.exports = {
   UpcomingProject,
   ResourceLibrary,
   Blog,
-  Newsletter
+  Newsletter,
+  Contact
 };
